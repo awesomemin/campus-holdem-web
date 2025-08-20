@@ -24,10 +24,10 @@ export function PageLayout({ children }) {
                 <span className="sr-only">Toggle Sidebar</span>
               </Button>
             </SheetTrigger>
-            <SheetContent side="left" className="bg-white dark:bg-gray-950">
+            <SheetContent side="left" className="bg-[hsl(var(--card))] dark:bg-[hsl(var(--card))]">
               <SheetHeader>
-                <SheetTitle className="dark:text-white">Sidebar</SheetTitle>
-                <SheetDescription className="dark:text-gray-400">
+                <SheetTitle className="text-gray-900 dark:text-white">Sidebar</SheetTitle>
+                <SheetDescription className="text-gray-700 dark:text-gray-400">
                   This is the sidebar content. You can add navigation links or
                   other elements here.
                 </SheetDescription>
