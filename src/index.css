@@ -1,7 +1,18 @@
+@import 'pretendard/dist/web/static/pretendard.css';
 @import 'tailwindcss';
 
 @layer base {
   body {
-    @apply bg-gray-800;
+    @apply bg-page;
+    @apply text-main-white;
   }
+}
+
+@theme {
+  --color-page: #1e1e1e;
+  --color-dark-bg: #1a1a1a;
+  --color-bright-bg: #303030;
+  --color-main-white: #fdf8f6;
+
+  --font-sans: pretendard;
 }
