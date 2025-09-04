@@ -3,16 +3,24 @@
 
 @layer base {
   body {
-    @apply bg-page;
-    @apply text-main-white;
+    @apply bg-bg-100;
+    @apply text-text-white;
   }
 }
 
 @theme {
-  --color-page: #1e1e1e;
-  --color-dark-bg: #1a1a1a;
-  --color-bright-bg: #303030;
-  --color-main-white: #fdf8f6;
+  --color-bg-100: #171717;
+  --color-bg-200: #1f1f1f;
+  --color-bg-300: #272829;
+  --color-bg-400: #4e5257;
+
+  --color-text-white: #e8e8e8;
+  --color-text-black: #171717;
+  --color-text-gray: #80868b;
+
+  --color-primary-red: #ed1111;
+  --color-primary-blue: #1e56aa;
+  --color-primary-green: #1e56aa;
 
   --font-sans: pretendard;
 }
