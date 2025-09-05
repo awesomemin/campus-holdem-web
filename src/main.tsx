@@ -1,11 +1,12 @@
-import { StrictMode } from 'react';
-import { createRoot } from 'react-dom/client';
 import './index.css';
-import Home from './pages/Home.tsx';
 import { BrowserRouter, Route, Routes } from 'react-router';
-import Layout from './pages/Layout.tsx';
+import { createRoot } from 'react-dom/client';
+import { StrictMode } from 'react';
 import GameDetail from './pages/GameDetail.tsx';
+import Layout from './pages/Layout.tsx';
+import Signup from './pages/Signup.tsx';
 import Login from './pages/Login.tsx';
+import Home from './pages/Home.tsx';
 
 createRoot(document.getElementById('root')!).render(
   <BrowserRouter>
@@ -17,6 +18,7 @@ createRoot(document.getElementById('root')!).render(
             <Route path=":gameId" element={<GameDetail />} />
           </Route>
           <Route path="/login" element={<Login />} />
+          <Route path="/signup" element={<Signup />} />
         </Route>
       </Routes>
     </StrictMode>
