@@ -33,6 +33,7 @@ function Login() {
           value={userInput.email}
           onChange={handleChange}
           type="email"
+          isError={false}
         />
         <AuthInput
           label="비밀번호"
@@ -41,6 +42,7 @@ function Login() {
           value={userInput.password}
           onChange={handleChange}
           type="password"
+          isError={false}
         />
         <AuthButton content="로그인" />
       </form>

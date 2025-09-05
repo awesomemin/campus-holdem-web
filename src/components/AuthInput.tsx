@@ -7,6 +7,8 @@ interface AuthInputProps {
   value: string;
   onChange: (e: ChangeEvent<HTMLInputElement>) => void;
   type: string;
+  isError: boolean;
+  errorMsg?: string;
 }
 
 function AuthInput({
@@ -16,15 +18,28 @@ function AuthInput({
   value,
   onChange,
   type,
+  isError,
+  errorMsg,
 }: AuthInputProps) {
   return (
     <div className="h-full mt-5">
-      <div className="font-medium text-lg">{label}</div>
+      <div className="flex items-end gap-1">
+        <span className="font-medium text-lg">{label}</span>
+        {isError && (
+          <span className="font-light text-primary-red text-sm">
+            {errorMsg}
+          </span>
+        )}
+      </div>
       <input
         name={name}
         type={type}
         placeholder={placeholder}
-        className="mt-2 border border-text-white w-full h-10 px-3 rounded-sm focus:outline-none focus:border-primary-green placeholder-shown:border-bg-400"
+        className={`mt-2 border w-full h-10 px-3 rounded-sm focus:outline-none   ${
+          isError
+            ? 'border-primary-red text-primary-red placeholder-primary-red'
+            : 'focus:border-primary-green border-text-white placeholder-shown:border-bg-400'
+        }`}
         onChange={onChange}
         value={value}
       ></input>

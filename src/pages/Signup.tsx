@@ -41,6 +41,8 @@ function Signup() {
           value={userInput.email}
           onChange={handleChange}
           type="email"
+          isError={false}
+          errorMsg="이메일 형식이 잘못되었습니다."
         />
         <AuthInput
           label="비밀번호"
@@ -49,6 +51,7 @@ function Signup() {
           value={userInput.password}
           onChange={handleChange}
           type="password"
+          isError={false}
         />
         <AuthInput
           label="비밀번호 확인"
@@ -57,6 +60,7 @@ function Signup() {
           value={userInput.passwordConfirm}
           onChange={handleChange}
           type="password"
+          isError={false}
         />
         <AuthInput
           label="닉네임"
@@ -65,6 +69,7 @@ function Signup() {
           value={userInput.nickname}
           onChange={handleChange}
           type="text"
+          isError={false}
         />
         <AuthInput
           label="전화번호"
@@ -73,6 +78,7 @@ function Signup() {
           value={userInput.phoneNumber}
           onChange={handleChange}
           type="tel"
+          isError={false}
         />
         <AuthButton content="회원가입" />
       </form>
