@@ -5,6 +5,7 @@ import Home from './pages/Home.tsx';
 import { BrowserRouter, Route, Routes } from 'react-router';
 import Layout from './pages/Layout.tsx';
 import GameDetail from './pages/GameDetail.tsx';
+import Login from './pages/Login.tsx';
 
 createRoot(document.getElementById('root')!).render(
   <BrowserRouter>
@@ -15,6 +16,7 @@ createRoot(document.getElementById('root')!).render(
           <Route path="game">
             <Route path=":gameId" element={<GameDetail />} />
           </Route>
+          <Route path="/login" element={<Login />} />
         </Route>
       </Routes>
     </StrictMode>
