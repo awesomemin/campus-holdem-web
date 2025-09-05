@@ -32,6 +32,7 @@ function Login() {
           placeholder="example@gmail.com"
           value={userInput.email}
           onChange={handleChange}
+          type="email"
         />
         <AuthInput
           label="비밀번호"
@@ -39,6 +40,7 @@ function Login() {
           placeholder="비밀번호를 입력해주세요."
           value={userInput.password}
           onChange={handleChange}
+          type="password"
         />
         <AuthButton content="로그인" />
       </form>

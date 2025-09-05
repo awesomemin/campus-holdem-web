@@ -6,6 +6,7 @@ interface AuthInputProps {
   placeholder: string;
   value: string;
   onChange: (e: ChangeEvent<HTMLInputElement>) => void;
+  type: string;
 }
 
 function AuthInput({
@@ -14,12 +15,14 @@ function AuthInput({
   placeholder,
   value,
   onChange,
+  type,
 }: AuthInputProps) {
   return (
     <div className="h-full mt-5">
       <div className="font-medium text-lg">{label}</div>
       <input
         name={name}
+        type={type}
         placeholder={placeholder}
         className="mt-2 border border-text-white w-full h-10 px-3 rounded-sm focus:outline-none focus:border-primary-green placeholder-shown:border-bg-400"
         onChange={onChange}
