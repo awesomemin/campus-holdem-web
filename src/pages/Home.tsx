@@ -18,42 +18,42 @@ function Home() {
       <GameListItem
         time="2025. 8. 23(토) 17:00"
         place="성균관대학교 산학협력관 85529"
-        gameId={1}
+        gameId={2}
         maxParticipant={9}
         curParticipant={9}
       />
       <GameListItem
         time="2025. 8. 23(토) 17:00"
         place="성균관대학교 산학협력관 85529"
-        gameId={1}
+        gameId={3}
         maxParticipant={9}
         curParticipant={9}
       />
       <GameListItem
         time="2025. 8. 23(토) 17:00"
         place="성균관대학교 산학협력관 85529"
-        gameId={1}
+        gameId={4}
         maxParticipant={9}
         curParticipant={9}
       />
       <GameListItem
         time="2025. 8. 23(토) 17:00"
         place="성균관대학교 산학협력관 85529"
-        gameId={1}
+        gameId={5}
         maxParticipant={9}
         curParticipant={9}
       />
       <GameListItem
         time="2025. 8. 23(토) 17:00"
         place="성균관대학교 산학협력관 85529"
-        gameId={1}
+        gameId={6}
         maxParticipant={9}
         curParticipant={9}
       />
       <GameListItem
         time="2025. 8. 23(토) 17:00"
         place="성균관대학교 산학협력관 85529"
-        gameId={1}
+        gameId={7}
         maxParticipant={9}
         curParticipant={9}
       />
