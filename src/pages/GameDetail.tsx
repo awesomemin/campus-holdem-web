@@ -26,7 +26,7 @@ interface Participant {
 }
 
 const fetchGameById = async (id: string): Promise<Game> => {
-  console.log(id);
+  console.log('fetch data of game id', id);
   const gameData = {
     gameId: 2,
     time: '2025. 8. 23(토) 17:00',
@@ -164,8 +164,11 @@ function GameDetail() {
           </span>
         </div>
         <div className="flex flex-col mr-5 mt-3">
-          {displayList.map((participant) => (
-            <ParticipantsListItem participant={participant} />
+          {displayList.map((participant, i) => (
+            <ParticipantsListItem
+              key={participant?.name ?? 'blank' + i}
+              participant={participant}
+            />
           ))}
         </div>
       </div>
