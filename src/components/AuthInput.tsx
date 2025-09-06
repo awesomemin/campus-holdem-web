@@ -32,6 +32,7 @@ function AuthInput({
         )}
       </div>
       <input
+        required
         name={name}
         type={type}
         placeholder={placeholder}
