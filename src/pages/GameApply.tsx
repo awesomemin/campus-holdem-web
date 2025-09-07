@@ -49,10 +49,8 @@ function GameApply() {
         <div className="font-medium mt-10">
           입금 뒤 24시간 내로 참가 신청이 확정됩니다.
         </div>
-        <div className="fixed left-0 right-0 bottom-0 flex justify-center">
-          <div className="w-full max-w-md mb-15 px-10">
-            <BigButton content="입금 완료 및 참가 신청" />
-          </div>
+        <div className="w-full px-10 mt-10">
+          <BigButton content="입금 완료 및 참가 신청" />
         </div>
       </div>
     </>
