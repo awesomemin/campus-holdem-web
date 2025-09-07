@@ -2,7 +2,7 @@ interface AuthButtonProps {
   content: string;
 }
 
-function AuthButton({ content }: AuthButtonProps) {
+function BigButton({ content }: AuthButtonProps) {
   return (
     <button className="w-full h-12 text-center bg-primary-green text-text-black font-semibold text-xl rounded-sm mt-5">
       {content}
@@ -10,4 +10,4 @@ function AuthButton({ content }: AuthButtonProps) {
   );
 }
 
-export default AuthButton;
+export default BigButton;

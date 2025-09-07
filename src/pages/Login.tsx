@@ -1,7 +1,7 @@
 import { useState, type ChangeEvent } from 'react';
 import AuthInput from '../components/AuthInput';
 import Header from '../components/Header';
-import AuthButton from '../components/AuthButton';
+import BigButton from '../components/BigButton';
 import { Link } from 'react-router';
 
 interface LoginUserInput {
@@ -44,7 +44,7 @@ function Login() {
           type="password"
           isError={false}
         />
-        <AuthButton content="로그인" />
+        <BigButton content="로그인" />
       </form>
       <Link to="/signup">
         <div className="mx-9 border border-primary-green h-12 rounded-sm mt-2 text-primary-green flex items-center justify-center text-xl">

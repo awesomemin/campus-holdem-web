@@ -1,7 +1,7 @@
 import { useEffect, useState, type ChangeEvent } from 'react';
 import AuthInput from '../components/AuthInput';
 import Header from '../components/Header';
-import AuthButton from '../components/AuthButton';
+import BigButton from '../components/BigButton';
 
 interface SignupUserInput {
   email: string;
@@ -151,7 +151,7 @@ function Signup() {
           isError={inputErrors.phoneNumber !== ''}
           errorMsg={inputErrors.phoneNumber}
         />
-        <AuthButton content="회원가입" />
+        <BigButton content="회원가입" />
       </form>
     </>
   );
