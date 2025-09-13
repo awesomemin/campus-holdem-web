@@ -15,6 +15,6 @@ export interface Game {
 export interface Participant {
   profileImgUrl: string;
   name: string;
-  // ppi: number;
+  ppi: number;
   isConfirmed: boolean;
 }

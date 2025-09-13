@@ -31,7 +31,7 @@ function ParticipantsListItem({ participant }: ParticipantsListItemProps) {
       ) : (
         <span className="text-xs bg-bg-300 px-1 py-0.5 rounded-md">대기</span>
       )}
-      {/* <span className="ml-auto mr-3">{participant.ppi} PPI</span> */}
+      <span className="ml-auto mr-3">{participant.ppi} PPI</span>
     </div>
   );
 }
