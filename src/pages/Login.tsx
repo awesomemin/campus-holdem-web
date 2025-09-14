@@ -1,8 +1,8 @@
-import { useState, type ChangeEvent } from 'react';
+import { useState, type ChangeEvent, type FormEvent } from 'react';
 import AuthInput from '../components/AuthInput';
 import Header from '../components/Header';
 import BigButton from '../components/BigButton';
-import { Link } from 'react-router';
+import { Link, useNavigate } from 'react-router';
 
 interface LoginUserInput {
   email: string;
@@ -10,22 +10,50 @@ interface LoginUserInput {
 }
 
 function Login() {
+  const navigate = useNavigate();
   const [userInput, setUserInput] = useState<LoginUserInput>({
     email: '',
     password: '',
   });
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
-    console.log(e.target);
     const { name, value } = e.target;
-    console.log(name, value);
     setUserInput({ ...userInput, [name]: value });
+  };
+
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
+    try {
+      const apiUrl = import.meta.env.VITE_API_URL;
+      const response = await fetch(`${apiUrl}/auth/login`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          email: userInput.email,
+          password: userInput.password,
+        }),
+      });
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || '로그인에 실패했습니다.');
+      }
+      const data = await response.json();
+      alert('로그인에 성공했습니다.');
+      console.log('Login successful:', data);
+      navigate('/');
+    } catch (error) {
+      console.error('Login error:', error);
+      alert(error instanceof Error ? error.message : '로그인에 실패했습니다.');
+    }
   };
 
   return (
     <>
       <Header />
-      <form className="mx-9">
+      <form className="mx-9" noValidate onSubmit={handleSubmit}>
         <AuthInput
           label="이메일"
           name="email"
