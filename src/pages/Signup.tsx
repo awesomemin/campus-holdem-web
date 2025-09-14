@@ -1,7 +1,8 @@
-import { useEffect, useState, type ChangeEvent } from 'react';
+import { useEffect, useState, type ChangeEvent, type FormEvent } from 'react';
 import AuthInput from '../components/AuthInput';
 import Header from '../components/Header';
 import BigButton from '../components/BigButton';
+import { useNavigate } from 'react-router';
 
 interface SignupUserInput {
   email: string;
@@ -12,6 +13,7 @@ interface SignupUserInput {
 }
 
 function Signup() {
+  const navigate = useNavigate();
   const [userInput, setUserInput] = useState<SignupUserInput>({
     email: '',
     password: '',
@@ -31,6 +33,46 @@ function Signup() {
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setUserInput({ ...userInput, [name]: value });
+  };
+
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    if (Object.values(userInput).some((value) => value === '')) return;
+    if (Object.values(inputErrors).some((error) => error !== '')) return;
+
+    try {
+      const apiUrl = import.meta.env.VITE_API_URL;
+
+      const response = await fetch(`${apiUrl}/auth/signup`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          email: userInput.email,
+          password: userInput.password,
+          nickname: userInput.nickname,
+          phoneNumber: userInput.phoneNumber,
+        }),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || '회원가입에 실패했습니다.');
+      }
+
+      const data = await response.json();
+      alert('회원가입이 완료되었습니다. 로그인해주세요.');
+      console.log('Signup successful:', data);
+      navigate('/login');
+    } catch (error) {
+      console.error('Signup error:', error);
+      alert(
+        error instanceof Error
+          ? error.message
+          : '회원가입 중 오류가 발생했습니다.'
+      );
+    }
   };
 
   useEffect(() => {
@@ -100,7 +142,7 @@ function Signup() {
       <div className="flex justify-center items-center font-semibold text-2xl h-[70px]">
         회원가입
       </div>
-      <form className="mt-7 mx-9" noValidate>
+      <form className="mt-7 mx-9" noValidate onSubmit={handleSubmit}>
         <AuthInput
           label="이메일"
           name="email"
