@@ -1,8 +1,15 @@
-import { createContext, useContext, useState, useEffect, type ReactNode } from 'react';
+import {
+  createContext,
+  useContext,
+  useState,
+  useEffect,
+  type ReactNode,
+} from 'react';
 
 interface User {
-  userId: string;
+  userId: number;
   nickname: string;
+  email: string;
 }
 
 interface AuthContextType {
@@ -41,7 +48,8 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   const logout = () => {
     setUser(null);
     localStorage.removeItem('user');
-    document.cookie = 'access_token=; path=/; expires=Thu, 01 Jan 1970 00:00:01 GMT;';
+    document.cookie =
+      'access_token=; path=/; expires=Thu, 01 Jan 1970 00:00:01 GMT;';
   };
 
   const value: AuthContextType = {

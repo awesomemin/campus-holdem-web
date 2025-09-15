@@ -54,7 +54,8 @@ function Login() {
         document.cookie = `access_token=Bearer ${data.access_token}; path=/; secure; samesite=strict`;
         login({
           userId: data.user.id,
-          nickname: data.user.nickname
+          nickname: data.user.nickname,
+          email: data.user.email,
         });
       }
 
