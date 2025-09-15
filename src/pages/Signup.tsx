@@ -3,6 +3,7 @@ import AuthInput from '../components/AuthInput';
 import Header from '../components/Header';
 import BigButton from '../components/BigButton';
 import { useNavigate } from 'react-router';
+import { useAuth } from '../contexts/AuthContext';
 
 interface SignupUserInput {
   email: string;
@@ -14,6 +15,7 @@ interface SignupUserInput {
 
 function Signup() {
   const navigate = useNavigate();
+  const { user } = useAuth();
   const [userInput, setUserInput] = useState<SignupUserInput>({
     email: '',
     password: '',
@@ -21,6 +23,12 @@ function Signup() {
     nickname: '',
     phoneNumber: '',
   });
+
+  useEffect(() => {
+    if (user) {
+      navigate(`/user/${user.userId}`);
+    }
+  }, [user, navigate]);
 
   const [inputErrors, setInputErros] = useState<SignupUserInput>({
     email: '',

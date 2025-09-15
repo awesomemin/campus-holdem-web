@@ -1,8 +1,9 @@
-import { useState, type ChangeEvent, type FormEvent } from 'react';
+import { useState, useEffect, type ChangeEvent, type FormEvent } from 'react';
 import AuthInput from '../components/AuthInput';
 import Header from '../components/Header';
 import BigButton from '../components/BigButton';
 import { Link, useNavigate } from 'react-router';
+import { useAuth } from '../contexts/AuthContext';
 
 interface LoginUserInput {
   email: string;
@@ -11,10 +12,17 @@ interface LoginUserInput {
 
 function Login() {
   const navigate = useNavigate();
+  const { login, user } = useAuth();
   const [userInput, setUserInput] = useState<LoginUserInput>({
     email: '',
     password: '',
   });
+
+  useEffect(() => {
+    if (user) {
+      navigate(`/user/${user.userId}`);
+    }
+  }, [user, navigate]);
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -41,6 +49,15 @@ function Login() {
         throw new Error(errorData.message || '로그인에 실패했습니다.');
       }
       const data = await response.json();
+
+      if (data.access_token) {
+        document.cookie = `access_token=Bearer ${data.access_token}; path=/; secure; samesite=strict`;
+        login({
+          userId: data.user.id,
+          nickname: data.user.nickname
+        });
+      }
+
       alert('로그인에 성공했습니다.');
       console.log('Login successful:', data);
       navigate('/');
