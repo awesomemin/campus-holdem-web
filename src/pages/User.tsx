@@ -1,45 +1,74 @@
 import Header from '../components/Header';
-import Edit from '@mui/icons-material/Edit';
-import DefaultProfileImgUrl from '../assets/defaultprofile.png';
-import { useAuth } from '../contexts/AuthContext';
-import { useEffect } from 'react';
-import { useNavigate } from 'react-router';
+import { useEffect, useState } from 'react';
+import { useParams } from 'react-router';
+import UserInfoBox from '../components/UserInfoBox';
+
+interface PublicUserDto {
+  id: string;
+  nickname: string;
+  profilePictureUrl: string | null;
+  ppi: number;
+  created_at: Date;
+}
+
+interface PrivateUserDto {
+  id: string;
+  email: string;
+  nickname: string;
+  phoneNumber: string;
+  profilePictureUrl: string | null;
+  ppi: number;
+  created_at: Date;
+}
+
+type User = PublicUserDto | PrivateUserDto | null;
 
 function User() {
-  const { user } = useAuth();
-  const navigate = useNavigate();
+  const { userId } = useParams();
+  const [userInfo, setUserInfo] = useState<User>(null);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
 
   useEffect(() => {
-    if (!user) {
-      navigate('/login');
-    }
-  }, [user, navigate]);
+    async function fetchUserInfo(userId: string) {
+      const apiUrl = import.meta.env.VITE_API_URL;
+      const accessToken = document.cookie
+        .split('; ')
+        .find((row) => row.startsWith('access_token='))
+        ?.split('=')[1];
 
-  if (!user) {
-    return <div>can't find user info</div>;
-  }
+      const response = await fetch(`${apiUrl}/users/${userId}`, {
+        headers: {
+          Authorization: accessToken || '',
+        },
+      });
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(
+          errorData.message || '유저 정보 불러오기에 실패했습니다.'
+        );
+      }
+      const data = await response.json();
+      console.log(response);
+      console.log(data);
+      setUserInfo(data);
+      setIsLoading(false);
+    }
+    if (userId) {
+      fetchUserInfo(userId);
+    }
+  }, [userId]);
+
+  if (isLoading || !userInfo) return <div>loading...</div>;
 
   return (
     <>
       <Header />
-      <div className="flex h-30 items-center">
-        <div>
-          <img
-            src={DefaultProfileImgUrl}
-            className="bg-text-white w-15 h-15 rounded-full ml-[30px]"
-          />
-        </div>
-        <div className="flex flex-col ml-4 gap-1">
-          <div className="flex items-center gap-1">
-            <span className="font-semibold text-xl">{user.nickname}</span>
-            <span className="font-light text-sm text-text-gray">
-              [{user.userId}]
-            </span>
-          </div>
-          <div className="font-light text-sm">{user.email}</div>
-        </div>
-        <Edit className="text-text-gray ml-auto mr-[30px]" />
-      </div>
+      <UserInfoBox
+        nickname={userInfo.nickname}
+        userId={userInfo.id}
+        email={'email' in userInfo ? userInfo.email : null}
+        profilePictureUrl={userInfo.profilePictureUrl}
+      />
     </>
   );
 }
