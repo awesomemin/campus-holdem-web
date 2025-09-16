@@ -1,11 +1,31 @@
 import type { Game } from '../types/game';
 
+export const fetchAllGames = async () => {
+  const apiUrl = import.meta.env.VITE_API_URL;
+  try {
+    const response = await fetch(`${apiUrl}/games/all`);
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(
+        errorData.message || '게임 정보 불러오기를 실패했습니다.'
+      );
+    }
+    const data = await response.json();
+
+    console.log(data);
+    return data;
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+};
+
 export const fetchGameById = async (id: string): Promise<Game> => {
   console.log('fetch data of game id', id);
   const gameData = {
-    gameId: 2,
+    id: 2,
     time: '2025. 8. 23(토) 17:00',
-    place: '성균관대학교 산학협력관 85529',
+    place: '성균관대학교 제2공학관 공과대학 세미나실(26119B)',
     particifationFee: 5000,
     rebuyinFee: 5000,
     startingChip: 20000,
