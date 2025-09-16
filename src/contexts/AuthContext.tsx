@@ -6,6 +6,17 @@ import {
   type ReactNode,
 } from 'react';
 
+const getAccessTokenFromCookie = (): string | null => {
+  const cookies = document.cookie.split(';');
+  for (const cookie of cookies) {
+    const [name, value] = cookie.trim().split('=');
+    if (name === 'access_token') {
+      return value || null;
+    }
+  }
+  return null;
+};
+
 interface User {
   userId: number;
   nickname: string;
@@ -29,7 +40,9 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
 
   useEffect(() => {
     const storedUser = localStorage.getItem('user');
-    if (storedUser) {
+    const accessToken = getAccessTokenFromCookie();
+
+    if (storedUser && accessToken) {
       try {
         const userData = JSON.parse(storedUser);
         setUser(userData);
@@ -37,6 +50,10 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
         console.error('Failed to parse user data from localStorage:', error);
         localStorage.removeItem('user');
       }
+    } else if (storedUser && !accessToken) {
+      console.log('Access token missing, clearing stored user data');
+      localStorage.removeItem('user');
+      setUser(null);
     }
   }, []);
 
