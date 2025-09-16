@@ -2,6 +2,7 @@ import Header from '../components/Header';
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router';
 import UserInfoBox from '../components/UserInfoBox';
+import PrivateUserMenuList from '../components/PrivateUserMenuList';
 
 interface PublicUserDto {
   id: string;
@@ -69,6 +70,7 @@ function User() {
         email={'email' in userInfo ? userInfo.email : null}
         profilePictureUrl={userInfo.profilePictureUrl}
       />
+      {'email' in userInfo && <PrivateUserMenuList />}
     </>
   );
 }

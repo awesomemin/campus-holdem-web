@@ -29,7 +29,16 @@ function UserInfoBox({
         </div>
         <div className="font-light text-sm">{email}</div>
       </div>
-      {email && <Edit className="text-text-gray ml-auto mr-[30px]" />}
+      {email && (
+        <div
+          className="text-text-gray ml-auto mr-[30px]"
+          onClick={() => {
+            alert('아직 지원하지 않는 기능입니다.');
+          }}
+        >
+          <Edit />
+        </div>
+      )}
     </div>
   );
 }
