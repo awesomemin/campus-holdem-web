@@ -6,9 +6,10 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
+    "build:dev": "tsc -b && vite build --mode development",
     "lint": "eslint .",
     "preview": "vite preview",
-    "deploy": "npm run build && sudo rsync -av --delete dist/ /var/www/campus-holdem-web/"
+    "deploy:dev": "npm run build && sudo rsync -av --delete dist/ /var/www/dev-campus-holdem-web/"
   },
   "dependencies": {
     "@emotion/react": "^11.14.0",
