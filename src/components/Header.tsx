@@ -9,7 +9,7 @@ function Header() {
       <Link to="/">성균홀덤대회</Link>
       <Link
         className="ml-auto mr-[18px]"
-        to={user ? `/user/${user.userId}` : 'login'}
+        to={user ? `/user/${user.userId}` : '/login'}
       >
         <Person />
       </Link>
