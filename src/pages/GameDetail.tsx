@@ -93,7 +93,7 @@ function GameDetail() {
         <div className="flex flex-col mr-5 mt-3">
           {displayList.map((participant, i) => (
             <ParticipantsListItem
-              key={participant?.name ?? 'blank' + i}
+              key={participant?.User.nickname ?? 'blank' + i}
               participant={participant}
             />
           ))}
@@ -103,10 +103,14 @@ function GameDetail() {
       {/* 하단바 */}
       <div className="fixed bg-bg-300 bottom-0 w-full max-w-md flex px-5 items-center justify-between h-16 shadow-[0_-4px_4px_-1px_rgba(0,0,0,0.1)]">
         <div className="text-xs font-light">
-          {gameInfo.minimumParticipant < gameInfo.participants.length ? (
+          {gameInfo.minParticipant < gameInfo.participants.length ? (
             <span>경기 진행이 확정되었어요</span>
           ) : (
-            <span>경기 확정까지 1명 남았어요</span>
+            <span>
+              경기 확정까지{' '}
+              {gameInfo.minParticipant - gameInfo.participants.length}명
+              남았어요
+            </span>
           )}
         </div>
         <Link to={`/game/${gameId}/apply`} state={{ gameInfo: gameInfo }}>

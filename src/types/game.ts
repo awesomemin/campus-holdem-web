@@ -8,7 +8,7 @@ export interface Game {
   startingBB: number;
   estimatedDurationInMinutes: number;
   maxParticipant: number;
-  minimumParticipant: number;
+  minParticipant: number;
   participants: Participant[];
 }
 
