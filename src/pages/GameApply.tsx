@@ -18,6 +18,7 @@ function GameApply() {
   const [loading, setLoading] = useState<boolean>(true);
   const [isUsingTicket, setIsUsingTicket] = useState<boolean>(false);
   const [ticketBalance, setTicketBalance] = useState<number>(0);
+  const [agree, setAgree] = useState<boolean>(false);
 
   useEffect(() => {
     if (authLoading) {
@@ -105,6 +106,10 @@ function GameApply() {
   }, [ticketBalance]);
 
   const handleApplyClick = async () => {
+    if (!agree) {
+      alert('환불 규정을 읽고 동의해주세요.');
+      return;
+    }
     if (!gameId || !user) return;
 
     try {
@@ -170,16 +175,14 @@ function GameApply() {
           {formatNumber(gameInfo.particifationFee)}원을 아래 계좌로
           입금해주세요.
         </div>
-        <div className="mt-6">110-471-692503 신한은행 (오성민)</div>
-        <div className="font-medium mt-10">
-          입금 뒤 24시간 내로 참가 신청이 확정됩니다.
-        </div>
+        <div className="font-medium mt-3">110-471-692503 신한은행 (오성민)</div>
+        <div className="mt-2">입금 뒤 24시간 내로 참가 신청이 확정됩니다.</div>
         <div className="mt-10">
           보유 중인 무료 참가권: {formatNumber(ticketBalance)}장
         </div>
         <div
           className={
-            'flex items-center ' +
+            'flex items-center mt-1 ' +
             (ticketBalance === 0 ? 'line-through text-text-gray' : '')
           }
         >
@@ -191,6 +194,23 @@ function GameApply() {
             }}
             disabled={ticketBalance === 0}
           />
+        </div>
+        <div className="flex flex-col items-center text-sm font-light mt-10">
+          <div>[환불 규정]</div>
+          <div>인원 부족으로 게임 진행이 불가능한 경우: 전액 환불</div>
+          <div>게임 전 날 자정까지 환불 의사를 밝힌 경우: 전액 환불</div>
+          <div>게임 시작 3시간 전까지 환불 의사를 밝힌 경우: 50% 환불</div>
+          <div>게임 시작이 3시간 남은 시점 이후: 환불 불가</div>
+          <div className="flex items-center">
+            환불 규정을 읽고 동의하였습니다
+            <CheckInput
+              checked={agree}
+              onClick={() => {
+                setAgree((prev) => !prev);
+              }}
+              disabled={false}
+            />
+          </div>
         </div>
         <div className="w-full px-10 mt-10">
           <BigButton
