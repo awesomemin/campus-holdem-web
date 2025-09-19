@@ -1,5 +1,6 @@
 import DefaultProfileImgUrl from '../assets/defaultprofile.png';
 import Edit from '@mui/icons-material/Edit';
+import { formatNumber } from '../utils/datetime';
 
 interface UserInfoBoxProps {
   nickname: string;
@@ -15,30 +16,50 @@ function UserInfoBox({
   profilePictureUrl,
 }: UserInfoBoxProps) {
   return (
-    <div className="flex h-30 items-center">
-      <div>
-        <img
-          src={profilePictureUrl || DefaultProfileImgUrl}
-          className="bg-text-white w-15 h-15 rounded-full ml-[30px]"
-        />
-      </div>
-      <div className="flex flex-col ml-4 gap-1">
-        <div className="flex items-center gap-1">
-          <span className="font-semibold text-xl">{nickname}</span>
-          <span className="font-light text-sm text-text-gray">[{userId}]</span>
+    <div className="flex flex-col">
+      <div className="flex h-30 items-center">
+        <div>
+          <img
+            src={profilePictureUrl || DefaultProfileImgUrl}
+            className="bg-text-white w-15 h-15 rounded-full ml-[30px]"
+          />
         </div>
-        <div className="font-light text-sm">{email}</div>
-      </div>
-      {email && (
-        <div
-          className="text-text-gray ml-auto mr-[30px]"
-          onClick={() => {
-            alert('아직 지원하지 않는 기능입니다.');
-          }}
-        >
-          <Edit />
+        <div className="flex flex-col ml-4 gap-1">
+          <div className="flex items-center gap-1">
+            <span className="font-semibold text-xl">{nickname}</span>
+            <span className="font-light text-sm text-text-gray">
+              [{userId}]
+            </span>
+          </div>
+          <div className="font-light text-sm">{email}</div>
         </div>
-      )}
+        {email && (
+          <div
+            className="text-text-gray ml-auto mr-[30px]"
+            onClick={() => {
+              alert('아직 지원하지 않는 기능입니다.');
+            }}
+          >
+            <Edit />
+          </div>
+        )}
+      </div>
+      <div className="mx-[30px] flex gap-3 mb-4">
+        <div className="h-[60px] bg-bg-300 flex-1 rounded-md relative">
+          <span className="font-light absolute top-1.5 left-2.5">PPI</span>
+          <span className="font-medium text-xl absolute bottom-2 right-3">
+            {formatNumber(1000)}
+          </span>
+        </div>
+        <div className="h-[60px] bg-bg-300 flex-1 rounded-md relative">
+          <span className="font-light absolute top-1.5 left-2.5">
+            무료 참가권
+          </span>
+          <span className="font-medium text-xl absolute bottom-2 right-3">
+            {formatNumber(0)}장
+          </span>
+        </div>
+      </div>
     </div>
   );
 }
