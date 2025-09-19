@@ -1,18 +1,30 @@
-import { useLocation, useParams } from 'react-router';
+import { useLocation, useParams, useNavigate } from 'react-router';
 import Header from '../components/Header';
 import GameInfoBox from '../components/GameInfoBox';
 import { useEffect, useState } from 'react';
 import type { Game } from '../types/game';
 import { fetchGameById } from '../api/game';
 import BigButton from '../components/BigButton';
+import { useAuth } from '../contexts/AuthContext';
 
 function GameApply() {
   const { gameId } = useParams<{ gameId: string }>();
   const location = useLocation();
+  const navigate = useNavigate();
+  const { user, isLoading: authLoading } = useAuth();
   const [gameInfo, setGameInfo] = useState<Game | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
 
   useEffect(() => {
+    if (authLoading) {
+      return;
+    }
+
+    if (!user) {
+      navigate('/login');
+      return;
+    }
+
     if (location.state?.gameInfo) {
       setGameInfo(location.state.gameInfo);
       setLoading(false);
@@ -29,7 +41,7 @@ function GameApply() {
       setLoading(false);
     };
     loadGameData();
-  }, []);
+  }, [authLoading, user, navigate, location.state?.gameInfo, gameId]);
 
   if (!gameId) return <div>not found</div>;
   if (loading || !gameInfo) return <div>loading...</div>;
