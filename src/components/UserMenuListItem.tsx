@@ -1,12 +1,16 @@
 import type { ReactNode } from 'react';
 
-interface UserMenuListProps {
+interface UserMenuListItemProps {
   content: string;
   children: ReactNode;
   onClick?: () => void;
 }
 
-function UserMenuList({ content, children, onClick }: UserMenuListProps) {
+function UserMenuListItem({
+  content,
+  children,
+  onClick,
+}: UserMenuListItemProps) {
   return (
     <div
       className="flex items-center gap-2 h-10 cursor-pointer"
@@ -18,4 +22,4 @@ function UserMenuList({ content, children, onClick }: UserMenuListProps) {
   );
 }
 
-export default UserMenuList;
+export default UserMenuListItem;
