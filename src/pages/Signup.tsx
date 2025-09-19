@@ -6,6 +6,7 @@ import { useNavigate } from 'react-router';
 import { useAuth } from '../contexts/AuthContext';
 
 interface SignupUserInput {
+  name: string;
   email: string;
   password: string;
   passwordConfirm: string;
@@ -17,6 +18,7 @@ function Signup() {
   const navigate = useNavigate();
   const { user } = useAuth();
   const [userInput, setUserInput] = useState<SignupUserInput>({
+    name: '',
     email: '',
     password: '',
     passwordConfirm: '',
@@ -31,6 +33,7 @@ function Signup() {
   }, [user, navigate]);
 
   const [inputErrors, setInputErros] = useState<SignupUserInput>({
+    name: '',
     email: '',
     password: '',
     passwordConfirm: '',
@@ -57,6 +60,7 @@ function Signup() {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
+          name: userInput.name,
           email: userInput.email,
           password: userInput.password,
           nickname: userInput.nickname,
@@ -85,12 +89,23 @@ function Signup() {
 
   useEffect(() => {
     const newError = {
+      name: '',
       email: '',
       password: '',
       passwordConfirm: '',
       nickname: '',
       phoneNumber: '',
     };
+
+    // name validate
+    const nameRegex = /^[가-힣]{2,5}$/;
+    if (userInput.name === '') {
+      newError.name = '';
+    } else if (!nameRegex.test(userInput.name)) {
+      newError.name = '이름은 2~5자의 한글만 가능합니다.';
+    } else {
+      newError.name = '';
+    }
 
     // email validate
     const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
@@ -190,6 +205,16 @@ function Signup() {
           type="text"
           isError={inputErrors.nickname !== ''}
           errorMsg={inputErrors.nickname}
+        />
+        <AuthInput
+          label="이름"
+          name="name"
+          placeholder="입금 확인을 위해 실명을 입력해주세요."
+          value={userInput.name}
+          onChange={handleChange}
+          type="text"
+          isError={inputErrors.name !== ''}
+          errorMsg={inputErrors.name}
         />
         <AuthInput
           label="전화번호"
