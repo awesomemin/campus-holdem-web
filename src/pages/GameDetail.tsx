@@ -6,6 +6,7 @@ import ParticipantsListItem from '../components/ParticipantsListItem';
 import type { Game, Participant } from '../types/game';
 import { fetchGameById } from '../api/game';
 import { useAuth } from '../contexts/AuthContext';
+import { formatDateTime } from '../utils/datetime';
 
 function GameDetail() {
   const { gameId } = useParams<{ gameId: string }>();
@@ -59,7 +60,7 @@ function GameDetail() {
       <Header />
       <GameInfoBox
         gameId={gameId}
-        time={gameInfo.time}
+        time={formatDateTime(gameInfo.time)}
         place={gameInfo.place}
       />
 

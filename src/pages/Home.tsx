@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import GameListItem from '../components/GameListItem';
 import Header from '../components/Header';
 import { fetchAllGames } from '../api/game';
+import { formatDateTime } from '../utils/datetime';
 
 interface GameListResponse {
   id: number;
@@ -84,7 +85,7 @@ function Home() {
         gameList.map((game) => (
           <GameListItem
             key={game.id}
-            time={game.time}
+            time={formatDateTime(game.time)}
             place={game.place}
             gameId={game.id}
             maxParticipant={game.maxParticipant}
