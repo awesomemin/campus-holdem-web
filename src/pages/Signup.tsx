@@ -219,7 +219,7 @@ function Signup() {
         <AuthInput
           label="전화번호"
           name="phoneNumber"
-          placeholder="ex) 010-1234-5678"
+          placeholder="ex) 01012345678"
           value={userInput.phoneNumber}
           onChange={handleChange}
           type="tel"

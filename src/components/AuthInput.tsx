@@ -22,8 +22,8 @@ function AuthInput({
   errorMsg,
 }: AuthInputProps) {
   return (
-    <div className="h-full mt-5">
-      <div className="flex items-end gap-1">
+    <div className="mt-5">
+      <div className="flex flex-col gap-1">
         <span className="font-medium text-lg">{label}</span>
         {isError && (
           <span className="font-light text-primary-red text-sm">
