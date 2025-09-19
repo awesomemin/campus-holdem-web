@@ -2,7 +2,7 @@ import { useLocation, useParams, useNavigate } from 'react-router';
 import Header from '../components/Header';
 import GameInfoBox from '../components/GameInfoBox';
 import { useEffect, useState } from 'react';
-import type { Game } from '../types/game';
+import type { Game, Participant } from '../types/game';
 import { fetchGameById } from '../api/game';
 import BigButton from '../components/BigButton';
 import { useAuth } from '../contexts/AuthContext';
@@ -25,22 +25,33 @@ function GameApply() {
       return;
     }
 
-    if (location.state?.gameInfo) {
-      setGameInfo(location.state.gameInfo);
-      setLoading(false);
-      return;
-    }
-    const loadGameData = async () => {
-      if (!gameId) {
-        setLoading(false);
+    const checkRegistrationAndLoadData = async () => {
+      let gameData = location.state?.gameInfo;
+
+      if (!gameData) {
+        if (!gameId) {
+          setLoading(false);
+          return;
+        }
+        setLoading(true);
+        gameData = await fetchGameById(gameId);
+      }
+
+      const isAlreadyRegistered = gameData?.participants.some(
+        (participant: Participant) => participant.User.id === user.userId
+      );
+
+      if (isAlreadyRegistered) {
+        alert('이미 이 게임에 신청하셨습니다.');
+        navigate(`/game/${gameId}`);
         return;
       }
-      setLoading(true);
-      const data = await fetchGameById(gameId);
-      setGameInfo(data);
+
+      setGameInfo(gameData);
       setLoading(false);
     };
-    loadGameData();
+
+    checkRegistrationAndLoadData();
   }, [authLoading, user, navigate, location.state?.gameInfo, gameId]);
 
   if (!gameId) return <div>not found</div>;

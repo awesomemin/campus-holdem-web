@@ -3,7 +3,7 @@ import { useParams, useNavigate } from 'react-router';
 import GameInfoBox from '../components/GameInfoBox';
 import Header from '../components/Header';
 import ParticipantsListItem from '../components/ParticipantsListItem';
-import type { Game } from '../types/game';
+import type { Game, Participant } from '../types/game';
 import { fetchGameById } from '../api/game';
 import { useAuth } from '../contexts/AuthContext';
 
@@ -33,6 +33,16 @@ function GameDetail() {
       navigate('/login');
       return;
     }
+
+    const isAlreadyRegistered = gameInfo?.participants.some(
+      (participant: Participant) => participant.User.id === user.userId
+    );
+
+    if (isAlreadyRegistered) {
+      alert('이미 이 게임에 신청하셨습니다.');
+      return;
+    }
+
     navigate(`/game/${gameId}/apply`, { state: { gameInfo: gameInfo } });
   };
 

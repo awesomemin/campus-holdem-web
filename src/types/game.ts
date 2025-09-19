@@ -13,8 +13,14 @@ export interface Game {
 }
 
 export interface Participant {
-  profileImgUrl: string;
-  name: string;
-  ppi: number;
-  isConfirmed: boolean;
+  userId: number;
+  status: 'CONFIRMED' | 'SUSPENDED';
+  rank: number | null;
+  ppiChange: number | null;
+  User: {
+    id: number;
+    nickname: string;
+    profilePictureUrl: string | null;
+    ppi: number;
+  };
 }
