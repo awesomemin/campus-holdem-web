@@ -137,11 +137,11 @@ function Signup() {
     }
 
     // nickname validate
-    const nicknameRegex = /^[a-zA-Z0-9가-힣]{3,10}$/;
+    const nicknameRegex = /^[a-zA-Z0-9가-힣]{2,10}$/;
     if (userInput.nickname === '') {
       newError.nickname = '';
     } else if (!nicknameRegex.test(userInput.nickname)) {
-      newError.nickname = '닉네임은 3 ~ 10자입니다.';
+      newError.nickname = '닉네임은 2 ~ 10자입니다.';
     } else {
       newError.nickname = '';
     }
