@@ -7,6 +7,7 @@ import { fetchGameById } from '../api/game';
 import BigButton from '../components/BigButton';
 import { useAuth } from '../contexts/AuthContext';
 import { formatDateTime, formatNumber } from '../utils/datetime';
+import CheckInput from '../components/CheckInput';
 
 function GameApply() {
   const { gameId } = useParams<{ gameId: string }>();
@@ -15,6 +16,8 @@ function GameApply() {
   const { user, isLoading: authLoading } = useAuth();
   const [gameInfo, setGameInfo] = useState<Game | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
+  const [isUsingTicket, setIsUsingTicket] = useState<boolean>(false);
+  const [ticketBalance, setTicketBalance] = useState<number>(0);
 
   useEffect(() => {
     if (authLoading) {
@@ -55,6 +58,52 @@ function GameApply() {
     checkRegistrationAndLoadData();
   }, [authLoading, user, navigate, location.state?.gameInfo, gameId]);
 
+  useEffect(() => {
+    const fetchUserTicketBalance = async () => {
+      if (!user) return;
+
+      try {
+        const apiUrl = import.meta.env.VITE_API_URL;
+        const getAccessToken = () => {
+          const cookies = document.cookie.split(';');
+          for (const cookie of cookies) {
+            const [name, value] = cookie.trim().split('=');
+            if (name === 'access_token') {
+              return value || null;
+            }
+          }
+          return null;
+        };
+
+        const token = getAccessToken();
+        if (!token) return;
+
+        const response = await fetch(`${apiUrl}/users/${user.userId}`, {
+          headers: {
+            Authorization: token,
+          },
+        });
+
+        if (response.ok) {
+          const userData = await response.json();
+          setTicketBalance(userData.ticketBalance || 0);
+        }
+      } catch (error) {
+        console.error('Failed to fetch user ticket balance:', error);
+        setTicketBalance(0);
+      }
+    };
+
+    fetchUserTicketBalance();
+  }, [user]);
+
+  // Reset ticket usage when no tickets available
+  useEffect(() => {
+    if (ticketBalance === 0) {
+      setIsUsingTicket(false);
+    }
+  }, [ticketBalance]);
+
   const handleApplyClick = async () => {
     if (!gameId || !user) return;
 
@@ -82,8 +131,11 @@ function GameApply() {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': token
+          Authorization: token,
         },
+        body: JSON.stringify({
+          useTicket: isUsingTicket,
+        }),
       });
 
       if (!response.ok) {
@@ -95,7 +147,11 @@ function GameApply() {
       navigate(`/game/${gameId}`);
     } catch (error) {
       console.error('Apply error:', error);
-      alert(error instanceof Error ? error.message : '참가 신청 중 오류가 발생했습니다.');
+      alert(
+        error instanceof Error
+          ? error.message
+          : '참가 신청 중 오류가 발생했습니다.'
+      );
     }
   };
 
@@ -111,14 +167,40 @@ function GameApply() {
       />
       <div className="flex flex-col items-center h-full">
         <div className="font-semibold text-xl mt-12">
-          {formatNumber(gameInfo.particifationFee)}원을 아래 계좌로 입금해주세요.
+          {formatNumber(gameInfo.particifationFee)}원을 아래 계좌로
+          입금해주세요.
         </div>
         <div className="mt-6">110-471-692503 신한은행 (오성민)</div>
         <div className="font-medium mt-10">
           입금 뒤 24시간 내로 참가 신청이 확정됩니다.
         </div>
+        <div className="mt-10">
+          보유 중인 무료 참가권: {formatNumber(ticketBalance)}장
+        </div>
+        <div
+          className={
+            'flex items-center ' +
+            (ticketBalance === 0 ? 'line-through text-text-gray' : '')
+          }
+        >
+          무료 참가권을 사용하여 참가 신청하기
+          <CheckInput
+            checked={isUsingTicket}
+            onClick={() => {
+              setIsUsingTicket((prev) => !prev);
+            }}
+            disabled={ticketBalance === 0}
+          />
+        </div>
         <div className="w-full px-10 mt-10">
-          <BigButton content="입금 완료 및 참가 신청" onClick={handleApplyClick} />
+          <BigButton
+            content={
+              isUsingTicket
+                ? '무료 참가권으로 참가 신청'
+                : '입금 완료 및 참가 신청'
+            }
+            onClick={handleApplyClick}
+          />
         </div>
       </div>
     </>
