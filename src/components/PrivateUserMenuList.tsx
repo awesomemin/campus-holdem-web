@@ -13,7 +13,9 @@ function PrivateUserMenuList() {
     navigate('/');
   };
 
-  const handleApplyList = () => {};
+  const handleApplyList = () => {
+    alert('곧 지원할 기능입니다.');
+  };
 
   return (
     <div className="flex flex-col mx-4">

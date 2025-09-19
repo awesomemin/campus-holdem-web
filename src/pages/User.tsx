@@ -9,6 +9,7 @@ interface PublicUserDto {
   nickname: string;
   profilePictureUrl: string | null;
   ppi: number;
+  ticketBalance: number;
   created_at: Date;
 }
 
@@ -19,6 +20,7 @@ interface PrivateUserDto {
   phoneNumber: string;
   profilePictureUrl: string | null;
   ppi: number;
+  ticketBalance: number;
   created_at: Date;
 }
 
@@ -69,6 +71,8 @@ function User() {
         userId={userInfo.id}
         email={'email' in userInfo ? userInfo.email : null}
         profilePictureUrl={userInfo.profilePictureUrl}
+        ppi={userInfo.ppi}
+        ticketBalance={userInfo.ticketBalance}
       />
       {'email' in userInfo && <PrivateUserMenuList />}
     </>

@@ -7,6 +7,8 @@ interface UserInfoBoxProps {
   userId: string;
   email: string | null;
   profilePictureUrl: string | null;
+  ppi: number;
+  ticketBalance: number;
 }
 
 function UserInfoBox({
@@ -14,6 +16,8 @@ function UserInfoBox({
   userId,
   email,
   profilePictureUrl,
+  ppi,
+  ticketBalance,
 }: UserInfoBoxProps) {
   return (
     <div className="flex flex-col">
@@ -48,7 +52,7 @@ function UserInfoBox({
         <div className="h-[60px] bg-bg-300 flex-1 rounded-md relative">
           <span className="font-light absolute top-1.5 left-2.5">PPI</span>
           <span className="font-medium text-xl absolute bottom-2 right-3">
-            {formatNumber(1000)}
+            {formatNumber(ppi)}
           </span>
         </div>
         <div className="h-[60px] bg-bg-300 flex-1 rounded-md relative">
@@ -56,7 +60,7 @@ function UserInfoBox({
             무료 참가권
           </span>
           <span className="font-medium text-xl absolute bottom-2 right-3">
-            {formatNumber(0)}장
+            {formatNumber(ticketBalance)}장
           </span>
         </div>
       </div>
