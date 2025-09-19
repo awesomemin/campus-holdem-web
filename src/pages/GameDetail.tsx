@@ -6,7 +6,7 @@ import ParticipantsListItem from '../components/ParticipantsListItem';
 import type { Game, Participant } from '../types/game';
 import { fetchGameById } from '../api/game';
 import { useAuth } from '../contexts/AuthContext';
-import { formatDateTime } from '../utils/datetime';
+import { formatDateTime, formatNumber } from '../utils/datetime';
 
 function GameDetail() {
   const { gameId } = useParams<{ gameId: string }>();
@@ -73,7 +73,7 @@ function GameDetail() {
             <span>가</span>
             <span>비</span>
           </div>
-          <span>{gameInfo.particifationFee}원</span>
+          <span>{formatNumber(gameInfo.particifationFee)}원</span>
 
           <div className="flex justify-between font-semibold">
             <span>리</span>
@@ -81,7 +81,7 @@ function GameDetail() {
             <span>인</span>
             <span>비</span>
           </div>
-          <span>{gameInfo.rebuyinFee}원</span>
+          <span>{formatNumber(gameInfo.rebuyinFee)}원</span>
 
           <div className="flex justify-between font-semibold">
             <span>스</span>
@@ -90,7 +90,7 @@ function GameDetail() {
             <span>칩</span>
           </div>
           <span>
-            {gameInfo.startingChip} ({gameInfo.startingBB}BB)
+            {formatNumber(gameInfo.startingChip)} ({gameInfo.startingBB}BB)
           </span>
 
           <div className="flex justify-between font-semibold">

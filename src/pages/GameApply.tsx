@@ -6,7 +6,7 @@ import type { Game, Participant } from '../types/game';
 import { fetchGameById } from '../api/game';
 import BigButton from '../components/BigButton';
 import { useAuth } from '../contexts/AuthContext';
-import { formatDateTime } from '../utils/datetime';
+import { formatDateTime, formatNumber } from '../utils/datetime';
 
 function GameApply() {
   const { gameId } = useParams<{ gameId: string }>();
@@ -111,7 +111,7 @@ function GameApply() {
       />
       <div className="flex flex-col items-center h-full">
         <div className="font-semibold text-xl mt-12">
-          {gameInfo.particifationFee}원을 아래 계좌로 입금해주세요.
+          {formatNumber(gameInfo.particifationFee)}원을 아래 계좌로 입금해주세요.
         </div>
         <div className="mt-6">110-471-692503 신한은행 (오성민)</div>
         <div className="font-medium mt-10">

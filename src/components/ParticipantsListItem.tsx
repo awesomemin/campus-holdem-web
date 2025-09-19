@@ -1,4 +1,5 @@
 import DefaultProfileImgUrl from '../assets/defaultprofile.png';
+import { formatNumber } from '../utils/datetime';
 
 interface Participant {
   userId: number;
@@ -39,7 +40,7 @@ function ParticipantsListItem({ participant }: ParticipantsListItemProps) {
       ) : (
         <span className="text-xs bg-bg-300 px-1 py-0.5 rounded-md">대기</span>
       )}
-      <span className="ml-auto mr-3">{participant.User.ppi} PPI</span>
+      <span className="ml-auto mr-3">{formatNumber(participant.User.ppi)} PPI</span>
     </div>
   );
 }

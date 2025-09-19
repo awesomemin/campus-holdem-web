@@ -12,3 +12,7 @@ export const formatDateTime = (datetime: string | Date): string => {
 
   return `${year}. ${month}. ${day}(${dayName}) ${hours}:${minutes}`;
 };
+
+export const formatNumber = (num: number): string => {
+  return num.toLocaleString();
+};
