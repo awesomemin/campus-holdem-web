@@ -1,13 +1,16 @@
 import { useEffect, useState } from 'react';
-import { Link, useParams } from 'react-router';
+import { useParams, useNavigate } from 'react-router';
 import GameInfoBox from '../components/GameInfoBox';
 import Header from '../components/Header';
 import ParticipantsListItem from '../components/ParticipantsListItem';
 import type { Game } from '../types/game';
 import { fetchGameById } from '../api/game';
+import { useAuth } from '../contexts/AuthContext';
 
 function GameDetail() {
   const { gameId } = useParams<{ gameId: string }>();
+  const navigate = useNavigate();
+  const { user } = useAuth();
   const [gameInfo, setGameInfo] = useState<Game | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
 
@@ -24,6 +27,14 @@ function GameDetail() {
     };
     loadGameData();
   }, [gameId]);
+
+  const handleApplyClick = () => {
+    if (!user) {
+      navigate('/login');
+      return;
+    }
+    navigate(`/game/${gameId}/apply`, { state: { gameInfo: gameInfo } });
+  };
 
   if (!gameId) return <div>not found</div>;
   if (loading || !gameInfo) return <div>loading...</div>;
@@ -113,11 +124,11 @@ function GameDetail() {
             </span>
           )}
         </div>
-        <Link to={`/game/${gameId}/apply`} state={{ gameInfo: gameInfo }}>
+        <button onClick={handleApplyClick}>
           <div className="h-9 w-32 rounded-sm bg-text-white text-text-black flex items-center justify-center">
             신청하기
           </div>
-        </Link>
+        </button>
       </div>
       {/* 하단바 끝 */}
     </>
