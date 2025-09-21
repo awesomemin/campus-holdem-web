@@ -7,6 +7,7 @@ interface GameListItemProps {
   gameId: number;
   maxParticipant: number;
   curParticipant: number;
+  status: 'PLANNED' | 'PROGRESS' | 'COMPLETED' | 'CANCELED';
 }
 
 function GameListItem({
@@ -15,7 +16,9 @@ function GameListItem({
   gameId,
   maxParticipant,
   curParticipant,
+  status,
 }: GameListItemProps) {
+  console.log(status);
   return (
     <Link
       to={`/game/${gameId}`}
