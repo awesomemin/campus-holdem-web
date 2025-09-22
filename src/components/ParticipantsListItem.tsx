@@ -1,5 +1,6 @@
 import DefaultProfileImgUrl from '../assets/defaultprofile.png';
 import { formatNumber } from '../utils/datetime';
+import ParticipantStatusBadge from './ParticipantStatusBadge';
 
 interface Participant {
   userId: number;
@@ -33,14 +34,11 @@ function ParticipantsListItem({ participant }: ParticipantsListItemProps) {
         src={participant.User.profilePictureUrl || DefaultProfileImgUrl}
       />
       <span className="mr-1">{participant.User.nickname}</span>
-      {participant.status == 'CONFIRMED' ? (
-        <span className="text-xs bg-primary-green text-text-black rounded-md px-1 py-0.5">
-          확정
-        </span>
-      ) : (
-        <span className="text-xs bg-bg-300 px-1 py-0.5 rounded-md">대기</span>
-      )}
-      <span className="ml-auto mr-3">{formatNumber(participant.User.ppi)} PPI</span>
+      <ParticipantStatusBadge status={participant.status} />
+
+      <span className="ml-auto mr-3">
+        {formatNumber(participant.User.ppi)} PPI
+      </span>
     </div>
   );
 }

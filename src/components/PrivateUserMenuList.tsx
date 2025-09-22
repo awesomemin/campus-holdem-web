@@ -14,7 +14,7 @@ function PrivateUserMenuList() {
   };
 
   const handleApplyList = () => {
-    alert('곧 지원할 기능입니다.');
+    navigate('applyList');
   };
 
   return (

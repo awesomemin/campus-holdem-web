@@ -11,6 +11,7 @@ import User from './pages/User.tsx';
 import GameApply from './pages/GameApply.tsx';
 import { AuthProvider } from './contexts/AuthContext.tsx';
 import Rankings from './pages/Rankings.tsx';
+import ApplyList from './pages/ApplyList.tsx';
 
 createRoot(document.getElementById('root')!).render(
   <AuthProvider>
@@ -26,6 +27,7 @@ createRoot(document.getElementById('root')!).render(
             <Route path="/login" element={<Login />} />
             <Route path="/signup" element={<Signup />} />
             <Route path="/user/:userId" element={<User />} />
+            <Route path="/user/:userId/applyList" element={<ApplyList />} />
             <Route path="/rankings" element={<Rankings />} />
           </Route>
         </Routes>
