@@ -1,4 +1,4 @@
-import UserMenuListItem from './UserMenuListItem';
+import MenuListItem from './MenuListItem';
 import Logout from '@mui/icons-material/Logout';
 import EventAvailable from '@mui/icons-material/EventAvailable';
 import { useAuth } from '../contexts/AuthContext';
@@ -19,12 +19,12 @@ function PrivateUserMenuList() {
 
   return (
     <div className="flex flex-col mx-4">
-      <UserMenuListItem content="신청내역" onClick={handleApplyList}>
+      <MenuListItem content="신청내역" onClick={handleApplyList}>
         <EventAvailable sx={{ color: '#00c896' }} />
-      </UserMenuListItem>
-      <UserMenuListItem content="로그아웃" onClick={handleLogout}>
+      </MenuListItem>
+      <MenuListItem content="로그아웃" onClick={handleLogout}>
         <Logout />
-      </UserMenuListItem>
+      </MenuListItem>
     </div>
   );
 }
