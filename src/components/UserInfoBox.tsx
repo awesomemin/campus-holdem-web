@@ -25,7 +25,7 @@ function UserInfoBox({
         <div>
           <img
             src={profilePictureUrl || DefaultProfileImgUrl}
-            className="bg-text-white w-15 h-15 rounded-full ml-[30px]"
+            className="bg-text-white w-15 h-15 rounded-full ml-6"
           />
         </div>
         <div className="flex flex-col ml-4 gap-1">
@@ -39,7 +39,7 @@ function UserInfoBox({
         </div>
         {email && (
           <div
-            className="text-text-gray ml-auto mr-[30px]"
+            className="text-text-gray ml-auto mr-6"
             onClick={() => {
               alert('아직 지원하지 않는 기능입니다.');
             }}
@@ -48,7 +48,7 @@ function UserInfoBox({
           </div>
         )}
       </div>
-      <div className="mx-[30px] flex gap-3 mb-4">
+      <div className="mx-6 flex gap-3 mb-4">
         <div className="h-[60px] bg-bg-300 flex-1 rounded-md relative">
           <span className="font-light absolute top-1.5 left-2.5">PPI</span>
           <span className="font-medium text-xl absolute bottom-2 right-3">

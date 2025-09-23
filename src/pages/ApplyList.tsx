@@ -102,7 +102,7 @@ function ApplyList() {
       <div className="flex justify-center items-center font-semibold text-2xl h-[70px]">
         신청내역
       </div>
-      <div className="mx-[30px] space-y-3">
+      <div className="mx-6 space-y-3">
         {games.length === 0 ? (
           <div className="text-center text-gray-500 py-8">
             신청한 경기가 없습니다.
@@ -115,7 +115,9 @@ function ApplyList() {
               status={game.participants[0]?.status || 'CONFIRMED'}
               time={game.time}
               place={game.place}
-              onClickBtn={() => {
+              onClickBtn={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
                 alert(
                   '곧 지원할 기능입니다. 참가 취소는 오픈채팅방을 통해 문의해주세요.'
                 );

@@ -7,7 +7,7 @@ interface ApplyListItemProps {
   status: 'CONFIRMED' | 'SUSPENDED';
   time: string;
   place: string;
-  onClickBtn: () => void;
+  onClickBtn: (e: React.MouseEvent<HTMLButtonElement>) => void;
 }
 
 function ApplyListItem({
@@ -20,17 +20,17 @@ function ApplyListItem({
   return (
     <Link
       to={`/game/${id}`}
-      className="relative flex flex-col gap-1 px-3 py-3 bg-bg-300 rounded-lg"
+      className="relative flex flex-col px-3 py-3 bg-bg-300 rounded-lg"
     >
       <div className="flex gap-1.5">
         <span className="font-light text-sm">#{id}</span>
         <ParticipantStatusBadge status={status} />
       </div>
       <div className="font-medium text-lg">{formatDateTime(time)}</div>
-      <div>{place}</div>
+      <div className="text-sm">{place}</div>
       <button
         onClick={onClickBtn}
-        className="absolute bottom-3 right-3 rounded bg-bg-400 px-1.5 py-1 font-medium text-sm cursor-pointer"
+        className="absolute top-3 right-3 rounded bg-bg-400 px-1.5 py-1 font-medium text-sm cursor-pointer"
       >
         참가 취소
       </button>
