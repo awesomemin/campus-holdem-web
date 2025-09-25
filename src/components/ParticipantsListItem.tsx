@@ -27,19 +27,54 @@ function ParticipantsListItem({ participant }: ParticipantsListItemProps) {
       </div>
     );
   }
+  if (participant.rank === null) {
+    return (
+      <div className="flex items-center h-11 pl-3 border-b border-bg-300">
+        <img
+          className="bg-text-white w-7 rounded-full mr-2"
+          src={participant.User.profilePictureUrl || DefaultProfileImgUrl}
+        />
+        <span className="mr-1">{participant.User.nickname}</span>
+        <StatusBadge
+          status={participant.status}
+          content={participant.status === 'CONFIRMED' ? '확정' : '대기'}
+        />
+
+        <span className="ml-auto mr-3">
+          {formatNumber(participant.User.ppi)} PPI
+        </span>
+      </div>
+    );
+  }
   return (
-    <div className="flex items-center h-11 pl-3 border-b border-bg-300">
+    <div className="flex items-center h-11 border-b border-bg-300">
+      <span className="w-8 text-center font-semibold text-lg">
+        {participant.rank === 1
+          ? '🥇'
+          : participant.rank === 2
+          ? '🥈'
+          : participant.rank === 3
+          ? '🥉'
+          : participant.rank}
+        .
+      </span>
       <img
         className="bg-text-white w-7 rounded-full mr-2"
         src={participant.User.profilePictureUrl || DefaultProfileImgUrl}
       />
-      <span className="mr-1">{participant.User.nickname}</span>
-      <StatusBadge
-        status={participant.status}
-        content={participant.status === 'CONFIRMED' ? '확정' : '대기'}
-      />
+      <span
+        className={`mr-1 ${
+          participant.rank === 1 && 'text-primary-green font-semibold'
+        }`}
+      >
+        {participant.User.nickname}
+      </span>
 
-      <span className="ml-auto mr-3">
+      <span
+        className={`ml-auto mr-3 ${
+          participant.rank === 1 && 'text-primary-green'
+        }`}
+      >
         {formatNumber(participant.User.ppi)} PPI
       </span>
     </div>

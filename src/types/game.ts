@@ -9,6 +9,7 @@ export interface Game {
   estimatedDurationInMinutes: number;
   maxParticipant: number;
   minParticipant: number;
+  status: 'COMPLETED' | 'CANCELED' | 'PLANNED' | 'PROGRESS';
   participants: Participant[];
 }
 

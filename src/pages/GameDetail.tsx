@@ -54,6 +54,7 @@ function GameDetail() {
     gameInfo.maxParticipant - gameInfo.participants.length;
   const emptySlots = Array(Math.max(0, emptySlotsCount)).fill(null);
   const displayList = [...gameInfo.participants, ...emptySlots];
+  console.log(gameInfo);
 
   return (
     <>
@@ -105,40 +106,65 @@ function GameDetail() {
 
       {/* 기본정보 끝 */}
       {/* 참가자 */}
-      <div className="pl-5 pt-5 pb-20">
-        <div>
-          <span className="font-medium text-xl mr-1">참가자</span>
-          <span className="font-light">
-            ({gameInfo.participants.length}/{gameInfo.maxParticipant})
-          </span>
+      {gameInfo.status !== 'COMPLETED' && (
+        <div className="pl-5 pt-5 pb-20">
+          <div>
+            <span className="font-medium text-xl mr-1">참가자</span>
+            <span className="font-light">
+              ({gameInfo.participants.length}/{gameInfo.maxParticipant})
+            </span>
+          </div>
+          <div className="flex flex-col mr-5 mt-3">
+            {displayList.map((participant, i) => (
+              <ParticipantsListItem
+                key={participant?.User.nickname ?? 'blank' + i}
+                participant={participant}
+              />
+            ))}
+          </div>
         </div>
-        <div className="flex flex-col mr-5 mt-3">
-          {displayList.map((participant, i) => (
-            <ParticipantsListItem
-              key={participant?.User.nickname ?? 'blank' + i}
-              participant={participant}
-            />
-          ))}
-        </div>
-      </div>
+      )}
       {/* 참가자 끝 */}
+      {/* 경기 결과 */}
+      {gameInfo.status === 'COMPLETED' && (
+        <div className="pl-5 pt-5 pb-20">
+          <div>
+            <span className="font-medium text-xl mr-1">경기 결과</span>
+          </div>
+          <div className="flex flex-col mr-5 mt-3">
+            {gameInfo.participants.map((participant, i) => (
+              <ParticipantsListItem
+                key={participant?.User.nickname ?? 'blank' + i}
+                participant={participant}
+              />
+            ))}
+          </div>
+        </div>
+      )}
+      {/* 경기 결과 끝 */}
       {/* 하단바 */}
       <div className="fixed bg-bg-300 bottom-0 w-full max-w-md flex px-5 items-center justify-between h-16 shadow-[0_-4px_4px_-1px_rgba(0,0,0,0.1)]">
         <div className="text-xs font-light">
-          {gameInfo.minParticipant < gameInfo.participants.length ? (
-            <span>경기 진행이 확정되었어요</span>
+          {gameInfo.status === 'PLANNED' ? (
+            gameInfo.minParticipant <= gameInfo.participants.length ? (
+              <span>경기 진행이 확정되었어요</span>
+            ) : (
+              <span>
+                경기 확정까지{' '}
+                {gameInfo.minParticipant - gameInfo.participants.length}명
+                남았어요
+              </span>
+            )
           ) : (
-            <span>
-              경기 확정까지{' '}
-              {gameInfo.minParticipant - gameInfo.participants.length}명
-              남았어요
-            </span>
+            <span>신청할 수 없는 경기입니다.</span>
           )}
         </div>
-        <button onClick={handleApplyClick}>
-          <div className="h-9 w-32 rounded-sm bg-text-white text-text-black flex items-center justify-center">
-            신청하기
-          </div>
+        <button
+          className="h-9 w-32 rounded-sm bg-text-white text-text-black flex items-center justify-center disabled:bg-bg-400 disabled:text-text-gray"
+          onClick={handleApplyClick}
+          disabled={gameInfo.status !== 'PLANNED'}
+        >
+          신청하기
         </button>
       </div>
       {/* 하단바 끝 */}
