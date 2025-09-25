@@ -15,6 +15,10 @@ interface GameListResponse {
   estimatedDurationInMinutes: number;
   maxParticipant: number;
   minParticipant: number;
+  winner?: {
+    nickname: string;
+    profilePictureUrl: string | null;
+  };
   status: 'PLANNED' | 'PROGRESS' | 'COMPLETED' | 'CANCELED';
   _count: {
     participants: number;
@@ -92,6 +96,7 @@ function Home() {
             maxParticipant={game.maxParticipant}
             curParticipant={game._count.participants}
             status={game.status}
+            winner={game.winner}
           />
         ))
       )}

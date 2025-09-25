@@ -1,6 +1,6 @@
 import { Link } from 'react-router';
 import { formatDateTime } from '../utils/datetime';
-import ParticipantStatusBadge from './ParticipantStatusBadge';
+import StatusBadge from './ParticipantStatusBadge';
 
 interface ApplyListItemProps {
   id: number;
@@ -24,7 +24,10 @@ function ApplyListItem({
     >
       <div className="flex gap-1.5">
         <span className="font-light text-sm">#{id}</span>
-        <ParticipantStatusBadge status={status} />
+        <StatusBadge
+          status={status}
+          content={status === 'CONFIRMED' ? '확정' : '대기'}
+        />
       </div>
       <div className="font-medium text-lg">{formatDateTime(time)}</div>
       <div className="text-sm">{place}</div>

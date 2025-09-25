@@ -1,18 +1,21 @@
-interface ParticipantStatusBadgeProps {
+interface StatusBadgeProps {
   status: 'CONFIRMED' | 'SUSPENDED';
+  content: string;
 }
 
-function ParticipantStatusBadge({ status }: ParticipantStatusBadgeProps) {
+function StatusBadge({ status, content }: StatusBadgeProps) {
   if (status == 'CONFIRMED')
     return (
       <span className="text-xs bg-primary-green text-text-black rounded-md px-1 py-0.5">
-        확정
+        {content}
       </span>
     );
   else
     return (
-      <span className="text-xs bg-bg-300 px-1 py-0.5 rounded-md">대기</span>
+      <span className="text-xs text-text-white bg-bg-400 px-1 py-0.5 rounded-md">
+        {content}
+      </span>
     );
 }
 
-export default ParticipantStatusBadge;
+export default StatusBadge;
