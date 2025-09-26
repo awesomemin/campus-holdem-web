@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react';
 import { useParams } from 'react-router';
 import UserInfoBox from '../components/UserInfoBox';
 import PrivateUserMenuList from '../components/PrivateUserMenuList';
+import EditProfileModal from '../components/EditProfileModal';
 
 interface PublicUserDto {
   id: string;
@@ -30,6 +31,7 @@ function User() {
   const { userId } = useParams();
   const [userInfo, setUserInfo] = useState<User>(null);
   const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
 
   useEffect(() => {
     async function fetchUserInfo(userId: string) {
@@ -61,7 +63,80 @@ function User() {
     }
   }, [userId]);
 
-  if (isLoading || !userInfo) return <div>loading...</div>;
+  const handleUpdateUser = async (updatedData: {
+    nickname?: string;
+    email?: string;
+    phoneNumber?: string;
+    profilePictureUrl?: string;
+  }) => {
+    if (!userInfo || !userId) return;
+
+    const apiUrl = import.meta.env.VITE_API_URL;
+    const accessToken = document.cookie
+      .split('; ')
+      .find((row) => row.startsWith('access_token='))
+      ?.split('=')[1];
+
+    try {
+      const response = await fetch(`${apiUrl}/users/`, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: accessToken || '',
+        },
+        body: JSON.stringify(updatedData),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || '프로필 업데이트에 실패했습니다.');
+      }
+
+      // After successful update, re-fetch the user data to ensure consistency
+      setIsModalOpen(false);
+      alert('프로필이 성공적으로 업데이트되었습니다.');
+
+      // Re-fetch user info to get the complete updated data
+      const fetchResponse = await fetch(`${apiUrl}/users/${userId}`, {
+        headers: {
+          Authorization: accessToken || '',
+        },
+      });
+
+      if (fetchResponse.ok) {
+        const updatedUserData = await fetchResponse.json();
+        setUserInfo(updatedUserData);
+      }
+    } catch (error) {
+      alert(
+        error instanceof Error
+          ? error.message
+          : '프로필 업데이트에 실패했습니다.'
+      );
+    }
+  };
+
+  if (isLoading) {
+    return (
+      <>
+        <Header />
+        <div className="flex justify-center items-center h-screen">
+          <div>Loading...</div>
+        </div>
+      </>
+    );
+  }
+
+  if (!userInfo) {
+    return (
+      <>
+        <Header />
+        <div className="flex justify-center items-center h-screen">
+          <div>사용자 정보를 찾을 수 없습니다.</div>
+        </div>
+      </>
+    );
+  }
 
   return (
     <>
@@ -73,8 +148,23 @@ function User() {
         profilePictureUrl={userInfo.profilePictureUrl}
         ppi={userInfo.ppi}
         ticketBalance={userInfo.ticketBalance}
+        onEditClick={() => setIsModalOpen(true)}
       />
       {'email' in userInfo && <PrivateUserMenuList />}
+      {'email' in userInfo && (
+        <EditProfileModal
+          open={isModalOpen}
+          onClose={() => setIsModalOpen(false)}
+          onSave={handleUpdateUser}
+          currentData={{
+            nickname: userInfo.nickname,
+            email: userInfo.email,
+            phoneNumber:
+              'phoneNumber' in userInfo ? userInfo.phoneNumber : null,
+            profilePictureUrl: userInfo.profilePictureUrl,
+          }}
+        />
+      )}
     </>
   );
 }

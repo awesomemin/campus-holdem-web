@@ -9,6 +9,7 @@ interface UserInfoBoxProps {
   profilePictureUrl: string | null;
   ppi: number;
   ticketBalance: number;
+  onEditClick?: () => void;
 }
 
 function UserInfoBox({
@@ -18,6 +19,7 @@ function UserInfoBox({
   profilePictureUrl,
   ppi,
   ticketBalance,
+  onEditClick,
 }: UserInfoBoxProps) {
   return (
     <div className="flex flex-col">
@@ -39,10 +41,8 @@ function UserInfoBox({
         </div>
         {email && (
           <div
-            className="text-text-gray ml-auto mr-6"
-            onClick={() => {
-              alert('아직 지원하지 않는 기능입니다.');
-            }}
+            className="text-text-gray ml-auto mr-6 cursor-pointer hover:text-primary-green"
+            onClick={onEditClick}
           >
             <Edit />
           </div>
