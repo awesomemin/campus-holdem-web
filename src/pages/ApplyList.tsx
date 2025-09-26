@@ -26,7 +26,17 @@ function ApplyList() {
     const fetchApplyList = async () => {
       try {
         const apiUrl = import.meta.env.VITE_API_URL;
-        const response = await fetch(`${apiUrl}/users/${userId}/applylist`);
+
+        const accessToken = document.cookie
+          .split('; ')
+          .find((row) => row.startsWith('access_token='))
+          ?.split('=')[1];
+
+        const response = await fetch(`${apiUrl}/users/applylist`, {
+          headers: {
+            Authorization: accessToken || '',
+          },
+        });
 
         if (!response.ok) {
           const errorData = await response.json();
