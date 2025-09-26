@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect } from 'react';
 import Modal from '@mui/material/Modal';
 import Box from '@mui/material/Box';
+import CircularProgress from '@mui/material/CircularProgress';
 import Close from '@mui/icons-material/Close';
 import AddAPhoto from '@mui/icons-material/AddAPhoto';
 import Delete from '@mui/icons-material/Delete';
@@ -9,7 +10,7 @@ import DefaultProfileImgUrl from '../assets/defaultprofile.png';
 interface EditProfileModalProps {
   open: boolean;
   onClose: () => void;
-  onSave: (formData: FormData) => void;
+  onSave: (formData: FormData) => Promise<void>;
   onDeleteProfilePicture: () => void;
   currentData: {
     nickname: string;
@@ -40,6 +41,7 @@ function EditProfileModal({
   );
   const [previewImage, setPreviewImage] = useState<string | null>(null);
   const [isDeleted, setIsDeleted] = useState(false);
+  const [isSaving, setIsSaving] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [errors, setErrors] = useState<ValidationErrors>({
     nickname: '',
@@ -108,7 +110,7 @@ function EditProfileModal({
     }
   };
 
-  const handleSave = () => {
+  const handleSave = async () => {
     // Check for validation errors
     if (Object.values(errors).some((error) => error !== '')) {
       return;
@@ -130,7 +132,12 @@ function EditProfileModal({
       formData.append('profilePicture', profilePictureFile);
     }
 
-    onSave(formData);
+    setIsSaving(true);
+    try {
+      await onSave(formData);
+    } finally {
+      setIsSaving(false);
+    }
   };
 
   const handleDeleteProfilePicture = () => {
@@ -179,7 +186,9 @@ function EditProfileModal({
             <img
               src={
                 previewImage ||
-                (isDeleted ? DefaultProfileImgUrl : currentData.profilePictureUrl) ||
+                (isDeleted
+                  ? DefaultProfileImgUrl
+                  : currentData.profilePictureUrl) ||
                 DefaultProfileImgUrl
               }
               alt="Profile"
@@ -276,14 +285,22 @@ function EditProfileModal({
           </button>
           <button
             onClick={handleSave}
-            disabled={Object.values(errors).some((error) => error !== '')}
-            className={`flex-1 py-2 rounded-md transition-colors ${
+            disabled={
+              Object.values(errors).some((error) => error !== '') || isSaving
+            }
+            className={`flex-1 py-2 rounded-md transition-colors flex items-center justify-center gap-2 ${
               Object.values(errors).some((error) => error !== '')
                 ? 'bg-gray-400 cursor-not-allowed'
                 : 'bg-primary-green text-text-black'
             }`}
           >
-            저장
+            {isSaving ? (
+              <>
+                <CircularProgress size={16} />
+              </>
+            ) : (
+              '저장'
+            )}
           </button>
         </div>
       </Box>
