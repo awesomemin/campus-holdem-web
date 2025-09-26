@@ -31,7 +31,7 @@ function ParticipantsListItem({ participant }: ParticipantsListItemProps) {
     return (
       <div className="flex items-center h-11 pl-3 border-b border-bg-300">
         <img
-          className="bg-text-white w-7 rounded-full mr-2"
+          className="bg-text-white w-7 rounded-full mr-2 object-cover"
           src={participant.User.profilePictureUrl || DefaultProfileImgUrl}
         />
         <span className="mr-1">{participant.User.nickname}</span>
@@ -59,7 +59,7 @@ function ParticipantsListItem({ participant }: ParticipantsListItemProps) {
         .
       </span>
       <img
-        className="bg-text-white w-7 rounded-full mr-2"
+        className="bg-text-white w-7 rounded-full mr-2 object-cover"
         src={participant.User.profilePictureUrl || DefaultProfileImgUrl}
       />
       <span

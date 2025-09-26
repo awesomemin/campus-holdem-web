@@ -27,7 +27,7 @@ function UserInfoBox({
         <div>
           <img
             src={profilePictureUrl || DefaultProfileImgUrl}
-            className="bg-text-white w-15 h-15 rounded-full ml-6"
+            className="bg-text-white w-15 h-15 rounded-full ml-6 object-cover"
           />
         </div>
         <div className="flex flex-col ml-4 gap-1">

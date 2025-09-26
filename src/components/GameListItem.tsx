@@ -56,7 +56,7 @@ function GameListItem({
         <div className="absolute top-1/2 -translate-y-1/2 right-3 flex flex-col gap-1 items-center">
           <span className="text-xs font-light text-text-white">우승자</span>
           <img
-            className="w-9 rounded-full bg-text-white"
+            className="w-9 rounded-full bg-text-white object-cover"
             src={winner?.profilePictureUrl || DefaultProfileImgUrl}
           />
           <span className="w-14 font-semibold text-center text-xs text-text-white leading-tight break-words">

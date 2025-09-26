@@ -63,12 +63,7 @@ function User() {
     }
   }, [userId]);
 
-  const handleUpdateUser = async (updatedData: {
-    nickname?: string;
-    email?: string;
-    phoneNumber?: string;
-    profilePictureUrl?: string;
-  }) => {
+  const handleUpdateUser = async (formData: FormData) => {
     if (!userInfo || !userId) return;
 
     const apiUrl = import.meta.env.VITE_API_URL;
@@ -78,13 +73,14 @@ function User() {
       ?.split('=')[1];
 
     try {
+      // Send the FormData with multipart/form-data
+      // Do not set Content-Type header - browser will set it automatically with boundary
       const response = await fetch(`${apiUrl}/users/`, {
         method: 'PATCH',
         headers: {
-          'Content-Type': 'application/json',
           Authorization: accessToken || '',
         },
-        body: JSON.stringify(updatedData),
+        body: formData,
       });
 
       if (!response.ok) {

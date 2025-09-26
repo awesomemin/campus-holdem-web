@@ -8,12 +8,7 @@ import DefaultProfileImgUrl from '../assets/defaultprofile.png';
 interface EditProfileModalProps {
   open: boolean;
   onClose: () => void;
-  onSave: (updatedData: {
-    nickname?: string;
-    email?: string;
-    phoneNumber?: string;
-    profilePictureUrl?: string;
-  }) => void;
+  onSave: (formData: FormData) => void;
   currentData: {
     nickname: string;
     email: string | null;
@@ -37,8 +32,8 @@ function EditProfileModal({
   const [nickname, setNickname] = useState(currentData.nickname);
   const [email, setEmail] = useState(currentData.email || '');
   const [phoneNumber, setPhoneNumber] = useState(currentData.phoneNumber || '');
-  const [profilePictureUrl, setProfilePictureUrl] = useState(
-    currentData.profilePictureUrl || ''
+  const [profilePictureFile, setProfilePictureFile] = useState<File | null>(
+    null
   );
   const [previewImage, setPreviewImage] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -82,11 +77,27 @@ function EditProfileModal({
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
+      // Validate file size and type
+      const maxSize = 5 * 1024 * 1024; // 5MB
+      const validTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
+
+      if (file.size > maxSize) {
+        alert('파일 크기는 5MB 이하여야 합니다.');
+        return;
+      }
+
+      if (!validTypes.includes(file.type)) {
+        alert('JPG, PNG, GIF, WEBP 파일만 업로드 가능합니다.');
+        return;
+      }
+
+      setProfilePictureFile(file);
+
+      // Create preview
       const reader = new FileReader();
       reader.onloadend = () => {
         const result = reader.result as string;
         setPreviewImage(result);
-        setProfilePictureUrl(result);
       };
       reader.readAsDataURL(file);
     }
@@ -98,30 +109,34 @@ function EditProfileModal({
       return;
     }
 
-    const updatedData: {
-      nickname?: string;
-      email?: string;
-      phoneNumber?: string;
-      profilePictureUrl?: string;
-    } = {};
+    const formData = new FormData();
 
-    if (nickname !== currentData.nickname) updatedData.nickname = nickname;
-    if (email !== currentData.email) updatedData.email = email;
-    if (phoneNumber !== currentData.phoneNumber)
-      updatedData.phoneNumber = phoneNumber;
-    if (profilePictureUrl !== currentData.profilePictureUrl) {
-      updatedData.profilePictureUrl = profilePictureUrl;
+    // Only append fields that have changed
+    if (nickname !== currentData.nickname) {
+      formData.append('nickname', nickname);
+    }
+    if (email !== currentData.email) {
+      formData.append('email', email || '');
+    }
+    if (phoneNumber !== currentData.phoneNumber) {
+      formData.append('phoneNumber', phoneNumber || '');
+    }
+    if (profilePictureFile) {
+      formData.append('profilePicture', profilePictureFile);
     }
 
-    onSave(updatedData);
+    onSave(formData);
   };
 
   const handleCancel = () => {
     setNickname(currentData.nickname);
     setEmail(currentData.email || '');
     setPhoneNumber(currentData.phoneNumber || '');
-    setProfilePictureUrl(currentData.profilePictureUrl || '');
+    setProfilePictureFile(null);
     setPreviewImage(null);
+    if (fileInputRef.current) {
+      fileInputRef.current.value = '';
+    }
     onClose();
   };
 
@@ -145,7 +160,11 @@ function EditProfileModal({
         <div className="flex flex-col items-center mb-6">
           <div className="relative">
             <img
-              src={previewImage || profilePictureUrl || DefaultProfileImgUrl}
+              src={
+                previewImage ||
+                currentData.profilePictureUrl ||
+                DefaultProfileImgUrl
+              }
               alt="Profile"
               className="w-24 h-24 rounded-full object-cover bg-text-white"
             />
@@ -175,7 +194,7 @@ function EditProfileModal({
               className={`w-full px-3 py-2 bg-bg-300 rounded-md focus:outline-none focus:ring-2 ${
                 errors.nickname
                   ? 'border border-red-500 focus:ring-red-500'
-                  : 'focus:ring-blue-500'
+                  : 'focus:ring-primary-green'
               }`}
               placeholder="닉네임을 입력하세요"
             />
@@ -193,7 +212,7 @@ function EditProfileModal({
               className={`w-full px-3 py-2 bg-bg-300 rounded-md focus:outline-none focus:ring-2 ${
                 errors.email
                   ? 'border border-red-500 focus:ring-red-500'
-                  : 'focus:ring-blue-500'
+                  : 'focus:ring-primary-green'
               }`}
               placeholder="이메일을 입력하세요"
             />
@@ -211,7 +230,7 @@ function EditProfileModal({
               className={`w-full px-3 py-2 bg-bg-300 rounded-md focus:outline-none focus:ring-2 ${
                 errors.phoneNumber
                   ? 'border border-red-500 focus:ring-red-500'
-                  : 'focus:ring-blue-500'
+                  : 'focus:ring-primary-green'
               }`}
               placeholder="전화번호를 입력하세요 (예: 01012345678)"
             />
