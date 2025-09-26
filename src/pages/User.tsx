@@ -63,6 +63,50 @@ function User() {
     }
   }, [userId]);
 
+  const handleDeleteProfilePicture = async () => {
+    if (!userId) return;
+
+    const apiUrl = import.meta.env.VITE_API_URL;
+    const accessToken = document.cookie
+      .split('; ')
+      .find((row) => row.startsWith('access_token='))
+      ?.split('=')[1];
+
+    try {
+      const response = await fetch(`${apiUrl}/users/profile-picture`, {
+        method: 'DELETE',
+        headers: {
+          Authorization: accessToken || '',
+        },
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(
+          errorData.message || '프로필 사진 삭제에 실패했습니다.'
+        );
+      }
+
+      // Re-fetch user info to update the UI
+      const fetchResponse = await fetch(`${apiUrl}/users/${userId}`, {
+        headers: {
+          Authorization: accessToken || '',
+        },
+      });
+
+      if (fetchResponse.ok) {
+        const updatedUserData = await fetchResponse.json();
+        setUserInfo(updatedUserData);
+      }
+    } catch (error) {
+      alert(
+        error instanceof Error
+          ? error.message
+          : '프로필 사진 삭제에 실패했습니다.'
+      );
+    }
+  };
+
   const handleUpdateUser = async (formData: FormData) => {
     if (!userInfo || !userId) return;
 
@@ -152,6 +196,7 @@ function User() {
           open={isModalOpen}
           onClose={() => setIsModalOpen(false)}
           onSave={handleUpdateUser}
+          onDeleteProfilePicture={handleDeleteProfilePicture}
           currentData={{
             nickname: userInfo.nickname,
             email: userInfo.email,

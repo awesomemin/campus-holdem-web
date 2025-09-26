@@ -3,12 +3,14 @@ import Modal from '@mui/material/Modal';
 import Box from '@mui/material/Box';
 import Close from '@mui/icons-material/Close';
 import AddAPhoto from '@mui/icons-material/AddAPhoto';
+import Delete from '@mui/icons-material/Delete';
 import DefaultProfileImgUrl from '../assets/defaultprofile.png';
 
 interface EditProfileModalProps {
   open: boolean;
   onClose: () => void;
   onSave: (formData: FormData) => void;
+  onDeleteProfilePicture: () => void;
   currentData: {
     nickname: string;
     email: string | null;
@@ -27,6 +29,7 @@ function EditProfileModal({
   open,
   onClose,
   onSave,
+  onDeleteProfilePicture,
   currentData,
 }: EditProfileModalProps) {
   const [nickname, setNickname] = useState(currentData.nickname);
@@ -36,6 +39,7 @@ function EditProfileModal({
     null
   );
   const [previewImage, setPreviewImage] = useState<string | null>(null);
+  const [isDeleted, setIsDeleted] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [errors, setErrors] = useState<ValidationErrors>({
     nickname: '',
@@ -92,6 +96,7 @@ function EditProfileModal({
       }
 
       setProfilePictureFile(file);
+      setIsDeleted(false); // Reset deleted state when new image is selected
 
       // Create preview
       const reader = new FileReader();
@@ -128,12 +133,24 @@ function EditProfileModal({
     onSave(formData);
   };
 
+  const handleDeleteProfilePicture = () => {
+    setProfilePictureFile(null);
+    setPreviewImage(null);
+    setIsDeleted(true);
+    if (fileInputRef.current) {
+      fileInputRef.current.value = '';
+    }
+    // Call the delete API immediately
+    onDeleteProfilePicture();
+  };
+
   const handleCancel = () => {
     setNickname(currentData.nickname);
     setEmail(currentData.email || '');
     setPhoneNumber(currentData.phoneNumber || '');
     setProfilePictureFile(null);
     setPreviewImage(null);
+    setIsDeleted(false);
     if (fileInputRef.current) {
       fileInputRef.current.value = '';
     }
@@ -162,7 +179,7 @@ function EditProfileModal({
             <img
               src={
                 previewImage ||
-                currentData.profilePictureUrl ||
+                (isDeleted ? DefaultProfileImgUrl : currentData.profilePictureUrl) ||
                 DefaultProfileImgUrl
               }
               alt="Profile"
@@ -177,10 +194,20 @@ function EditProfileModal({
             />
             <button
               onClick={() => fileInputRef.current?.click()}
-              className="absolute bottom-0 right-0 bg-bg-400 rounded-full p-1.5"
+              className="absolute bottom-0 right-0 bg-bg-400 rounded-full p-1.5 hover:bg-bg-500 transition-colors"
+              title="사진 변경"
             >
               <AddAPhoto className="w-5 h-5" />
             </button>
+            {(currentData.profilePictureUrl || previewImage) && !isDeleted && (
+              <button
+                onClick={handleDeleteProfilePicture}
+                className="absolute bottom-0 left-0 bg-red-500 rounded-full p-1.5 hover:bg-red-600 transition-colors"
+                title="사진 삭제"
+              >
+                <Delete className="w-5 h-5 text-white" />
+              </button>
+            )}
           </div>
         </div>
 
