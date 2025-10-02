@@ -34,19 +34,6 @@ function Rankings() {
         // If we received fewer items than the limit, we've reached the end
         const reachedEnd = data.rankings.length < data.limit;
         setHasMore(!reachedEnd);
-
-        // If viewport is large and observer target is visible, load next page
-        if (!reachedEnd) {
-          setTimeout(() => {
-            if (observerTarget.current) {
-              const rect = observerTarget.current.getBoundingClientRect();
-              const isVisible = rect.top < window.innerHeight;
-              if (isVisible && !loadingRef.current) {
-                setPage((prev) => prev + 1);
-              }
-            }
-          }, 100);
-        }
       } catch (error) {
         console.error('Failed to load rankings:', error);
       } finally {
@@ -58,10 +45,29 @@ function Rankings() {
     loadRankings();
   }, [page, hasMore]);
 
+  // Check if we need to load more after rendering
+  useEffect(() => {
+    if (!loading && hasMore && observerTarget.current) {
+      const checkVisibility = () => {
+        if (observerTarget.current && !loadingRef.current) {
+          const rect = observerTarget.current.getBoundingClientRect();
+          const isVisible = rect.top < window.innerHeight;
+          if (isVisible) {
+            setPage((prev) => prev + 1);
+          }
+        }
+      };
+
+      // Small delay to ensure DOM is updated
+      const timeoutId = setTimeout(checkVisibility, 150);
+      return () => clearTimeout(timeoutId);
+    }
+  }, [rankings, loading, hasMore]);
+
   useEffect(() => {
     const observer = new IntersectionObserver(
       (entries) => {
-        if (entries[0].isIntersecting && hasMore && !loading) {
+        if (entries[0].isIntersecting && hasMore && !loading && !loadingRef.current) {
           setPage((prev) => prev + 1);
         }
       },
