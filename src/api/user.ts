@@ -1,3 +1,5 @@
+import { authenticatedFetch } from '../utils/api';
+
 export interface UserRankingDto {
   userId: number;
   nickname: string;
@@ -18,17 +20,11 @@ export const fetchRankings = async (
   page: number
 ): Promise<UserRankingsResponseDto> => {
   const apiUrl = import.meta.env.VITE_API_URL;
-  const accessToken = document.cookie
-    .split('; ')
-    .find((row) => row.startsWith('access_token='))
-    ?.split('=')[1];
 
   try {
-    const response = await fetch(`${apiUrl}/users/rankings?page=${page}`, {
-      headers: {
-        Authorization: accessToken || '',
-      },
-    });
+    const response = await authenticatedFetch(
+      `${apiUrl}/users/rankings?page=${page}`
+    );
     if (!response.ok) {
       const errorData = await response.json();
       throw new Error(

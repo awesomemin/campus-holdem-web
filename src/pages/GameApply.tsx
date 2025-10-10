@@ -8,6 +8,7 @@ import BigButton from '../components/BigButton';
 import { useAuth } from '../contexts/AuthContext';
 import { formatDateTime, formatNumber } from '../utils/datetime';
 import CheckInput from '../components/CheckInput';
+import { authenticatedFetch } from '../utils/api';
 
 function GameApply() {
   const { gameId } = useParams<{ gameId: string }>();
@@ -65,25 +66,9 @@ function GameApply() {
 
       try {
         const apiUrl = import.meta.env.VITE_API_URL;
-        const getAccessToken = () => {
-          const cookies = document.cookie.split(';');
-          for (const cookie of cookies) {
-            const [name, value] = cookie.trim().split('=');
-            if (name === 'access_token') {
-              return value || null;
-            }
-          }
-          return null;
-        };
-
-        const token = getAccessToken();
-        if (!token) return;
-
-        const response = await fetch(`${apiUrl}/users/${user.userId}`, {
-          headers: {
-            Authorization: token,
-          },
-        });
+        const response = await authenticatedFetch(
+          `${apiUrl}/users/${user.userId}`
+        );
 
         if (response.ok) {
           const userData = await response.json();
@@ -114,34 +99,18 @@ function GameApply() {
 
     try {
       const apiUrl = import.meta.env.VITE_API_URL;
-      const getAccessToken = () => {
-        const cookies = document.cookie.split(';');
-        for (const cookie of cookies) {
-          const [name, value] = cookie.trim().split('=');
-          if (name === 'access_token') {
-            return value || null;
-          }
+      const response = await authenticatedFetch(
+        `${apiUrl}/games/${gameId}/apply`,
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            useTicket: isUsingTicket,
+          }),
         }
-        return null;
-      };
-
-      const token = getAccessToken();
-      if (!token) {
-        alert('인증 토큰이 없습니다. 다시 로그인해주세요.');
-        navigate('/login');
-        return;
-      }
-
-      const response = await fetch(`${apiUrl}/games/${gameId}/apply`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: token,
-        },
-        body: JSON.stringify({
-          useTicket: isUsingTicket,
-        }),
-      });
+      );
 
       if (!response.ok) {
         const errorData = await response.json();

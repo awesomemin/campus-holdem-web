@@ -4,6 +4,7 @@ import { useParams } from 'react-router';
 import UserInfoBox from '../components/UserInfoBox';
 import PrivateUserMenuList from '../components/PrivateUserMenuList';
 import EditProfileModal from '../components/EditProfileModal';
+import { authenticatedFetch } from '../utils/api';
 
 interface PublicUserDto {
   id: string;
@@ -36,16 +37,8 @@ function User() {
   useEffect(() => {
     async function fetchUserInfo(userId: string) {
       const apiUrl = import.meta.env.VITE_API_URL;
-      const accessToken = document.cookie
-        .split('; ')
-        .find((row) => row.startsWith('access_token='))
-        ?.split('=')[1];
 
-      const response = await fetch(`${apiUrl}/users/${userId}`, {
-        headers: {
-          Authorization: accessToken || '',
-        },
-      });
+      const response = await authenticatedFetch(`${apiUrl}/users/${userId}`);
       if (!response.ok) {
         const errorData = await response.json();
         throw new Error(
@@ -67,18 +60,14 @@ function User() {
     if (!userId) return;
 
     const apiUrl = import.meta.env.VITE_API_URL;
-    const accessToken = document.cookie
-      .split('; ')
-      .find((row) => row.startsWith('access_token='))
-      ?.split('=')[1];
 
     try {
-      const response = await fetch(`${apiUrl}/users/profile-picture`, {
-        method: 'DELETE',
-        headers: {
-          Authorization: accessToken || '',
-        },
-      });
+      const response = await authenticatedFetch(
+        `${apiUrl}/users/profile-picture`,
+        {
+          method: 'DELETE',
+        }
+      );
 
       if (!response.ok) {
         const errorData = await response.json();
@@ -88,11 +77,9 @@ function User() {
       }
 
       // Re-fetch user info to update the UI
-      const fetchResponse = await fetch(`${apiUrl}/users/${userId}`, {
-        headers: {
-          Authorization: accessToken || '',
-        },
-      });
+      const fetchResponse = await authenticatedFetch(
+        `${apiUrl}/users/${userId}`
+      );
 
       if (fetchResponse.ok) {
         const updatedUserData = await fetchResponse.json();
@@ -111,19 +98,12 @@ function User() {
     if (!userInfo || !userId) return;
 
     const apiUrl = import.meta.env.VITE_API_URL;
-    const accessToken = document.cookie
-      .split('; ')
-      .find((row) => row.startsWith('access_token='))
-      ?.split('=')[1];
 
     try {
       // Send the FormData with multipart/form-data
       // Do not set Content-Type header - browser will set it automatically with boundary
-      const response = await fetch(`${apiUrl}/users/`, {
+      const response = await authenticatedFetch(`${apiUrl}/users/`, {
         method: 'PATCH',
-        headers: {
-          Authorization: accessToken || '',
-        },
         body: formData,
       });
 
@@ -137,11 +117,9 @@ function User() {
       alert('프로필이 성공적으로 업데이트되었습니다.');
 
       // Re-fetch user info to get the complete updated data
-      const fetchResponse = await fetch(`${apiUrl}/users/${userId}`, {
-        headers: {
-          Authorization: accessToken || '',
-        },
-      });
+      const fetchResponse = await authenticatedFetch(
+        `${apiUrl}/users/${userId}`
+      );
 
       if (fetchResponse.ok) {
         const updatedUserData = await fetchResponse.json();

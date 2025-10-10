@@ -3,6 +3,7 @@ import { useState, useEffect } from 'react';
 import { useAuth } from '../contexts/AuthContext';
 import Header from '../components/Header';
 import ApplyListItem from '../components/ApplyListItem';
+import { authenticatedFetch } from '../utils/api';
 
 interface ApplyListGame {
   id: number;
@@ -27,16 +28,7 @@ function ApplyList() {
       try {
         const apiUrl = import.meta.env.VITE_API_URL;
 
-        const accessToken = document.cookie
-          .split('; ')
-          .find((row) => row.startsWith('access_token='))
-          ?.split('=')[1];
-
-        const response = await fetch(`${apiUrl}/users/applylist`, {
-          headers: {
-            Authorization: accessToken || '',
-          },
-        });
+        const response = await authenticatedFetch(`${apiUrl}/users/applylist`);
 
         if (!response.ok) {
           const errorData = await response.json();
