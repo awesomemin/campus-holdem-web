@@ -6,7 +6,9 @@ import ParticipantsListItem from '../components/ParticipantsListItem';
 import type { Game, Participant } from '../types/game';
 import { fetchGameById } from '../api/game';
 import { useAuth } from '../contexts/AuthContext';
-import { formatDateTime, formatNumber } from '../utils/datetime';
+import { formatDateTime } from '../utils/datetime';
+import GameBasicInfo from '../components/GameBasicInfo';
+import GameDetailBottomBar from '../components/GameDetailBottomBar';
 
 function GameDetail() {
   const { gameId } = useParams<{ gameId: string }>();
@@ -48,7 +50,15 @@ function GameDetail() {
   };
 
   if (!gameId) return <div>not found</div>;
-  if (loading || !gameInfo) return <div>loading...</div>;
+  if (loading || !gameInfo)
+    return (
+      <>
+        <Header />
+        <GameInfoBox gameId="..." time="..." place="..." loading />
+        <GameBasicInfo gameInfo={null} loading />
+        <GameDetailBottomBar gameInfo={null} handleApplyClick={null} loading />
+      </>
+    );
 
   const emptySlotsCount =
     gameInfo.maxParticipant - gameInfo.participants.length;
@@ -65,46 +75,7 @@ function GameDetail() {
         place={gameInfo.place}
       />
 
-      {/* 기본정보 */}
-      <div className="py-5 pl-5 border-b-8 border-bg-300">
-        <div className="font-medium text-xl">기본정보</div>
-        <div className="grid grid-cols-[72px_1fr] gap-x-5 gap-y-2 mt-3 ml-1">
-          <div className="flex justify-between font-semibold">
-            <span>참</span>
-            <span>가</span>
-            <span>비</span>
-          </div>
-          <span>{formatNumber(gameInfo.particifationFee)}원</span>
-
-          <div className="flex justify-between font-semibold">
-            <span>리</span>
-            <span>바</span>
-            <span>인</span>
-            <span>비</span>
-          </div>
-          <span>{formatNumber(gameInfo.rebuyinFee)}원</span>
-
-          <div className="flex justify-between font-semibold">
-            <span>스</span>
-            <span>타</span>
-            <span>팅</span>
-            <span>칩</span>
-          </div>
-          <span>
-            {formatNumber(gameInfo.startingChip)} ({gameInfo.startingBB}BB)
-          </span>
-
-          <div className="flex justify-between font-semibold">
-            <span>예</span>
-            <span>상</span>
-            <span>시</span>
-            <span>간</span>
-          </div>
-          <span>{gameInfo.estimatedDurationInMinutes}분</span>
-        </div>
-      </div>
-
-      {/* 기본정보 끝 */}
+      <GameBasicInfo gameInfo={gameInfo} />
       {/* 참가자 */}
       {gameInfo.status !== 'COMPLETED' && (
         <div className="pl-5 pt-5 pb-20">
@@ -143,30 +114,10 @@ function GameDetail() {
       )}
       {/* 경기 결과 끝 */}
       {/* 하단바 */}
-      <div className="fixed bg-bg-300 bottom-0 w-full max-w-md flex px-5 items-center justify-between h-16 shadow-[0_-4px_4px_-1px_rgba(0,0,0,0.1)]">
-        <div className="text-xs font-light">
-          {gameInfo.status === 'PLANNED' ? (
-            gameInfo.minParticipant <= gameInfo.participants.length ? (
-              <span>경기 진행이 확정되었어요</span>
-            ) : (
-              <span>
-                경기 확정까지{' '}
-                {gameInfo.minParticipant - gameInfo.participants.length}명
-                남았어요
-              </span>
-            )
-          ) : (
-            <span>신청할 수 없는 경기입니다.</span>
-          )}
-        </div>
-        <button
-          className="h-9 w-32 rounded-sm bg-text-white text-text-black flex items-center justify-center disabled:bg-bg-400 disabled:text-text-gray"
-          onClick={handleApplyClick}
-          disabled={gameInfo.status !== 'PLANNED'}
-        >
-          신청하기
-        </button>
-      </div>
+      <GameDetailBottomBar
+        gameInfo={gameInfo}
+        handleApplyClick={handleApplyClick}
+      />
       {/* 하단바 끝 */}
     </>
   );
